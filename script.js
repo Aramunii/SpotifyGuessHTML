@@ -1,24 +1,27 @@
 var randomElement;
 var init_seconds = 1;
+// var endpoint ='https://song-guess2.herokuapp.com';
+var endpoint = 'http://localhost:30850'
+var difficult = 0;
+
+SONGS = [];
+SONGS_SELECTED = [];
+artistName = '';
+
 $(function () {
 
-    async function fetchArtists() {
-        await fetch('https://aramunii.github.io/song-guess/data.json').then(function (response) {
-            // The API call was successful!
-            return response.text();
-        }).then(async function (html) {
-            all_artists = JSON.parse(html);
-        });
-
-    }
+    var LOADING = $("#loading");
+    var dificult_select = $("#difficult_select");
+    var DIFF_SELECT = $('#dificultSelect');
+    var GAME = $("#game");
+    var SELECT_ARTIST = $('#selectMenu');
     $('.owl-carousel').owlCarousel();
 
-    fetchArtists();
-
+    /* TELA DE ESCOLHER O ARTISTA  */
     $('#selectArtists').on('input', async function () {
         var search = $('#selectArtists').val();
         $.ajax({
-            url: 'https://song-guess2.herokuapp.com/search/artists?q=' + encodeURI(search),
+            url: endpoint + '/search/artists?q=' + encodeURI(search),
             method: 'get',
             dataType: 'json',
             beforeSend: function () {
@@ -32,7 +35,7 @@ $(function () {
                     $('#artists').append(`
 
                             <div class="ml-2 text-center" style=" cursor: pointer">
-                                <a class="select-artist" data-id="${artist.id}" >
+                                <a class="select-artist" data-id="${artist.id}" data-name="${artist.name}" >
                                  <img src="${artist.images[1].url}">
                                  <h4 class="text-default">${artist.name}</h4>
                                 </a>
@@ -43,31 +46,100 @@ $(function () {
         })
     })
 
-    $('#moreSeconds').on('click',function ()
-    {
+    $(document).on('click', '.select-artist', function () {
+        DIFF_SELECT.show(300);
+        SELECT_ARTIST.hide(300);
+        getSongsByArtist($(this).data('id'))
+        artistName = $(this).data('name');
+        $('#artist_title').text(artistName);
+    })
+
+    async function getSongsByArtist(artist) {
+        $.ajax({
+            url: endpoint + '/albums?q=' + encodeURI(artist),
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                dificult_select.hide();
+                LOADING.show(300);
+            },
+            success: function (response) {
+                dificult_select.show(300);
+                LOADING.hide(300);
+                SONGS = response;
+            }
+        });
+    }
+
+    /*  TElA DE ESCOLHER QUANTIDADE DE MUSICA*/
+    $('.start-game').on('click', function () {
+        difficult = parseInt($(this).text())
+        setSongs();
+    })
+
+    async function setSongs() {
+        const shuffled = SONGS.sort(() => 0.5 - Math.random());
+        let selected = shuffled.slice(0, difficult);
+
+        SONGS_SELECTED = selected.map(select => {
+            return {
+                artist: select.artist,
+                previewUrl: select.previewUrl,
+                song: select.song,
+                played: false,
+                win: false,
+                seconds: 0,
+            }
+        })
+        startGame();
+    }
+
+    async function startGame() {
+        DIFF_SELECT.hide(300);
+        GAME.show(300);
+        setMusic(SONGS_SELECTED[difficult - 1])
+    }
+
+    async function nextSong() {
+        difficult--;
+        setMusic(SONGS_SELECTED[difficult - 1])
+    }
+
+
+    $('#moreSeconds').on('click', function () {
         init_seconds++;
         $("#jquery_jplayer_1").jPlayer('play');
     })
-    $(document).on('click', '.guess-song', function () {
-        if ($(this).data('song') == randomElement.song) {
-            answer_secods = init_seconds;
-            init_seconds=40;
-            $("#jquery_jplayer_1").jPlayer('play');
-            Swal.fire({
-                title: `${randomElement.song}`,
-                html:`<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
-                icon: 'success',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
 
+    $(document).on('click', '.guess-song', function () {
+        var actual_song = SONGS_SELECTED[difficult - 1];
+        if ($(this).data('song') == actual_song.song) {
+            answer_secods = init_seconds;
+            init_seconds = 40;
+
+            SONGS_SELECTED[difficult - 1].win = true;
+            SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+
+            $("#jquery_jplayer_1").jPlayer('play');
+
+            Swal.fire({
+                title: `${actual_song.song}`,
+                html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
+                icon: 'success',
+                confirmButtonText: 'Próxima'
+            }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.reload();
+                    if (difficult - 1 === 0) {
+                        finishGame();
+                    } else {
+                        nextSong();
+                    }
                 }
             });
-        }else{
+        } else {
             Swal.fire({
                 title: `Você errou`,
-                html:``,
+                html: ``,
                 icon: 'error',
                 showDenyButton: true,
                 confirmButtonText: 'Continuar',
@@ -83,8 +155,58 @@ $(function () {
         }
     });
 
-    async function setMusic(url) {
+    async function finishGame() {
+        GAME.hide(300);
+        SONGS_SELECTED.forEach(song => {
+            var emoji = song.win ? '&#9989;' : '&#10060;'
+            $('#answers').append(`<li >${song.song} - ${emoji} -  ${song.seconds}s</li>`)
+        })
+        $("#win").show(300);
+    }
+
+    $('.newGame').on('click',function ()
+    {
+        window.location.reload();
+    })
+
+    $('#nextSong').on('click', function () {
+        answer_secods = init_seconds;
+        init_seconds = 40;
+        SONGS_SELECTED[difficult - 1].win = false;
+        SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+        $("#jquery_jplayer_1").jPlayer('play');
+        var actual_song = SONGS_SELECTED[difficult-1];
+        Swal.fire({
+            title: `A Música era: `,
+            html: `<p>${actual_song.song}</p>`,
+            icon: 'info',
+            confirmButtonText: 'Próxima'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                nextSong();
+            }
+        });
+    })
+
+
+    async function setMusic(song) {
+        init_seconds = 1;
+        var url = song.previewUrl;
+        var song_name = song.song;
+        var others = SONGS.filter(res => {
+            if (res.song != song_name) {
+                return res;
+            }
+        })
+
+        others = others.slice(0, 6);
+        var options = others.concat(song);
+
+        $('#bar').empty();
+
+
         $("#jquery_jplayer_1").jPlayer("destroy");
+
         myPlayer = new CirclePlayer("#jquery_jplayer_1",
             {
                 m4a: url,
@@ -100,88 +222,15 @@ $(function () {
             }
         })
 
-        myPlayer.player.bind($.jPlayer.event.play, function (event) {
-           console.log('DEU PLAY');
-           // setTimeout(init_seconds, )
-        })
+        shuffle(options);
 
-        // $("#jquery_jplayer_1").jPlayer({
-        //     timeupdate: function(event) { // 4Hz
-        //         // Restrict playback to first 60 seconds.
-        //
-        //     }
-        //     // Then other options, such as: ready, swfPath, supplied and so on.
-        // });
+        $('#songs').empty();
+
+        options.forEach(el => {
+            $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-song="${el.song}"> ${el.song} </button>`)
+        })
 
     }
-
-    $(document).on('click', '.select-artist', function () {
-        $.ajax({
-            url: 'https://song-guess2.herokuapp.com/toptrack?q=' + encodeURI($(this).data('id')),
-            method: 'get',
-            dataType: 'json',
-            beforeSend: function () {
-            },
-            success: function (response) {
-                $('#dificultSelect').show(300);
-                randomElement = response[Math.floor(Math.random() * response.length)];
-                console.log(randomElement);
-
-                var others = response.filter(res => {
-                    if (res.song !== randomElement.song) {
-                        return res;
-                    }
-                })
-
-                others = others.slice(0, 3);
-                var options = others.concat(randomElement);
-
-                $('#bar').empty();
-
-                setMusic(randomElement.previewUrl)
-
-                shuffle(options);
-                $('#songs').empty();
-                options.forEach(el => {
-                    $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-song="${el.song}"> ${el.song} </button>`)
-                })
-                $('#selectMenu').hide();
-            }
-
-        });
-
-    })
-
-    $("#searchButton").on('click', async function () {
-
-        var search = $('#selectArtists').val();
-
-        $.ajax({
-            url: 'https://song-guess2.herokuapp.com/search/artists?q=' + encodeURI(search),
-            method: 'get',
-            dataType: 'json',
-            beforeSend: function () {
-            },
-            success: function (response) {
-
-                $('#artists').empty();
-
-                response.forEach(artist => {
-                    $('#artists').append(`
-                            <div class="col-md-4 text-center">
-                                <img src="${artist.image}">
-                                <h4>${artist.name}</h4>
-                            </div>
-`)
-                })
-
-                console.log(response);
-            }
-        })
-
-
-    })
-
 
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
@@ -200,6 +249,4 @@ $(function () {
 
         return array;
     }
-
-
 })

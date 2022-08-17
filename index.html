@@ -116,14 +116,52 @@
                 </div>
             </div>
 
+
             <div id="dificultSelect" style="display: none;">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Deseja adivinhar quantas músicas?
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-4">
+                                    <div class="col-md-12 center" id="loading">
+                                        <img style="display:block" width="300" src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921">
+                                        <h3>Carregando, guenta aê!</h3>
+                                    </div>
+                                    <div class="row" id="difficult_select">
+                                        <div class="col-md-4">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <button class="btn btn-primary btn-user btn-block start-game">3</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <button  class="btn btn-primary btn-user btn-block start-game">5</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <button class="btn btn-primary btn-user btn-block start-game">10</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="game" style="display: none;">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary text-center">Adivinhe a música!
                         </h6>
                     </div>
                     <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="p-4">
@@ -134,28 +172,29 @@
                                         </div>
                                     </div>
                                     <h3 class="text-default text-center timeMidi " style="display: none">0</h3>
-
                                     <div id="jquery_jplayer_1" class="cp-jplayer"></div>
-                                    <div class="prototype-wrapper"> <!-- A wrapper to emulate use in a webpage and center align -->
-                                        <!-- The container for the interface can go where you want to display it. Show and hide it as you need. -->
+                                    <div class="prototype-wrapper">
                                         <div id="cp_container_1" class="cp-container" style="height: 200px;">
-                                            <div class="cp-buffer-holder"> <!-- .cp-gt50 only needed when buffer is > than 50% -->
+                                            <div class="cp-buffer-holder">
                                                 <div class="cp-buffer-1"></div>
                                                 <div class="cp-buffer-2"></div>
                                             </div>
-                                            <div class="cp-progress-holder"> <!-- .cp-gt50 only needed when progress is > than 50% -->
+                                            <div class="cp-progress-holder">
                                                 <div class="cp-progress-1"></div>
                                                 <div class="cp-progress-2"></div>
                                             </div>
                                             <div class="cp-circle-control"></div>
                                             <ul class="cp-controls">
                                                 <li><a class="cp-play" tabindex="1">play</a></li>
-                                                <li><a class="cp-pause" style="display:none;" tabindex="1">pause</a></li> <!-- Needs the inline style here, or jQuery.show() uses display:inline instead of display:block -->
+                                                <li><a class="cp-pause" style="display:none;" tabindex="1">pause</a></li>
                                             </ul>
                                         </div>
                                         <div class="row mt-2 mb-2 text-center">
                                             <button id='moreSeconds'
                                                     class="btn btn-warning btn-user btn-block text-default">+1 segundo
+                                            </button>
+                                            <button id='nextSong'
+                                                    class="btn btn-danger btn-user btn-block">Não sei
                                             </button>
                                         </div>
                                     </div>
@@ -170,38 +209,46 @@
                 </div>
             </div>
 
-            <div id="gameMode" style="display: none;">
+            <div id="win" style="display: none">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary text-center">Selecione o Modo de Jogo
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Obrigado por jogar!
                         </h6>
                     </div>
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
-                        <div class="row">
+                        <div class="row text-default">
                             <div class="col-lg-12">
                                 <div class="p-4">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group" style="margin-top: 20px;">
-                                                <button id='startLetter'
-                                                        class="btn btn-primary btn-user btn-block ">Adivinhe pela Letra
-                                                </button>
-                                            </div>
+                                        <div class="col-lg-12">
+                                            <h1 id="artist_title" class="text-center">Supercombo</h1>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group" style="margin-top: 20px;">
-                                                <button id='startMidi'
-                                                        class="btn btn-primary btn-user btn-block">Adivinhe pelo Som
-                                                </button>
-                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <ul id="answers" class="text-center">
+
+                                            </ul>
                                         </div>
+                                    </div>
+                                    <div class="row">
+<!--                                        <div class="col-lg-12">-->
+<!--                                            <h4 class="text-center">Pontuação: <span-->
+<!--                                                    id="count_play"><b>2/3</b></span></h4>-->
+<!--                                        </div>-->
+                                    </div>
+                                    <div class="form-group" style="margin-top: 20px;">
+                                        <button onclick="window.location.reload()" class="btn btn-primary btn-user btn-block share">Novo
+                                            jogo</button>
+                                        <a id="payDev" style="display: block;" href="https://nubank.com.br/pagar/56hu3/lHYlQvDAmm"
+                                           class="btn btn-gradient-warning text-white bg-gradient-warning btn-user btn-block">Ajudar o desenvolvedor</a>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
 
 
