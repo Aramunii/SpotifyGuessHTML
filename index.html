@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Song Guess</title>
+    <script src="./sweet.js"></script>
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.9.0.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript" src="./jplayer/jquery.transform.js"></script>
+    <script type="text/javascript" src="./jplayer/jquery.grab.js"></script>
+    <script type="text/javascript" src="./jplayer/jquery.jplayer.js"></script>
+    <script type="text/javascript" src="./jplayer/mod.csstransforms.min.js"></script>
+    <script src="./circle.player.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
+            integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <script src="./script.js"></script>
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="./css/jquery.button-audio-player.css" />
+    <script src="./js/jquery.button-audio-player.js"></script>
+
+    <style>
+        .text-default {
+            color: black;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+    </style>
+
+</head>
+
+<body id="page-top" class="bg-gradient-primary">
+
+<!-- Page Wrapper -->
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div id="selectMenu" style="display: block;">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Selecione o Artista</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-4">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <input class="form-control form-control-user" value=""
+                                                       id="selectArtists" type="text" name="artists"
+                                                       placeholder="Procure uma banda ou artista">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-10" id="artists">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dificultSelect" style="display: none;">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Adivinhe a música!
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-4">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <a id="bar" >
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="songs">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="gameMode" style="display: none;">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Selecione o Modo de Jogo
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-4">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <button id='startLetter'
+                                                        class="btn btn-primary btn-user btn-block ">Adivinhe pela Letra
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <button id='startMidi'
+                                                        class="btn btn-primary btn-user btn-block">Adivinhe pelo Som
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html>
