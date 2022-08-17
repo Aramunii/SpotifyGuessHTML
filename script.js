@@ -11,6 +11,7 @@ $(function () {
         });
 
     }
+    $('.owl-carousel').owlCarousel();
 
     fetchArtists();
 
@@ -24,18 +25,20 @@ $(function () {
             },
             success: function (response) {
                 console.log(response);
-
+                $('.owl-carousel').trigger("destroy.owl.carousel");
                 $('#artists').empty();
 
                 response.forEach(artist => {
                     $('#artists').append(`
-                            <div class="col-md-4 text-center" style=" cursor: pointer">
+
+                            <div class="ml-2 text-center" style=" cursor: pointer">
                                 <a class="select-artist" data-id="${artist.id}" >
-                                 <img src="${artist.images[2].url}">
+                                 <img src="${artist.images[1].url}">
                                  <h4 class="text-default">${artist.name}</h4>
                                 </a>
                             </div>`)
                 })
+                $('.owl-carousel').owlCarousel();
             }
         })
     })
