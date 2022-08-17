@@ -1,5 +1,5 @@
 var randomElement;
-
+var init_seconds = 1;
 $(function () {
 
     async function fetchArtists() {
@@ -40,20 +40,77 @@ $(function () {
         })
     })
 
+    $('#moreSeconds').on('click',function ()
+    {
+        init_seconds++;
+        $("#jquery_jplayer_1").jPlayer('play');
+    })
     $(document).on('click', '.guess-song', function () {
-        if ($(this).data('song') === randomElement.song) {
-                Swal.fire('Parabéns','Você acertou!','success').then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                        window.location.reload();
-                    } else if (result.isDenied) {
-                    }
-                });
+        if ($(this).data('song') == randomElement.song) {
+            answer_secods = init_seconds;
+            init_seconds=40;
+            $("#jquery_jplayer_1").jPlayer('play');
+            Swal.fire({
+                title: `${randomElement.song}`,
+                html:`<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    window.location.reload();
+                }
+            });
         }else{
-            swal.fire('Que pena!','Você errou!','error')
+            Swal.fire({
+                title: `Você errou`,
+                html:``,
+                icon: 'error',
+                showDenyButton: true,
+                confirmButtonText: 'Continuar',
+                denyButtonText: `Novo Jogo`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    init_seconds++;
+                    $("#jquery_jplayer_1").jPlayer('play');
+                } else if (result.isDenied) {
+                    window.location.reload();
+                }
+            });
         }
     });
 
+    async function setMusic(url) {
+        $("#jquery_jplayer_1").jPlayer("destroy");
+        myPlayer = new CirclePlayer("#jquery_jplayer_1",
+            {
+                m4a: url,
+            }, {
+                cssSelectorAncestor: "#cp_container_1"
+            });
+
+        myPlayer.player.bind($.jPlayer.event.timeupdate, function (event) {
+            totalTimePlayed = event.jPlayer.status.currentTime;
+            $('.timeMidi').text(totalTimePlayed);
+            if (event.jPlayer.status.currentTime > init_seconds) {
+                $(this).jPlayer('stop');
+            }
+        })
+
+        myPlayer.player.bind($.jPlayer.event.play, function (event) {
+           console.log('DEU PLAY');
+           // setTimeout(init_seconds, )
+        })
+
+        // $("#jquery_jplayer_1").jPlayer({
+        //     timeupdate: function(event) { // 4Hz
+        //         // Restrict playback to first 60 seconds.
+        //
+        //     }
+        //     // Then other options, such as: ready, swfPath, supplied and so on.
+        // });
+
+    }
 
     $(document).on('click', '.select-artist', function () {
         $.ajax({
@@ -72,15 +129,13 @@ $(function () {
                         return res;
                     }
                 })
+
                 others = others.slice(0, 3);
                 var options = others.concat(randomElement);
 
                 $('#bar').empty();
 
-                $('#bar').buttonAudioPlayer({
-                    type: 'bar-animation',
-                    src: randomElement.previewUrl
-                });
+                setMusic(randomElement.previewUrl)
 
                 shuffle(options);
                 $('#songs').empty();

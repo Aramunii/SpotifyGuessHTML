@@ -16,8 +16,23 @@
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="./node_modules/axios/dist/axios.min.js"></script>
+
+
+    <style>
+        body {
+            background-color:#f0f0f0;
+        }
+
+        .prototype-wrapper {
+            width:200px;
+            margin: 0 auto;
+        }
+    </style>
+
+    <link rel="stylesheet" href="circle.skin/circle.player.css">
 
     <script type="text/javascript" src="./jplayer/jquery.transform.js"></script>
     <script type="text/javascript" src="./jplayer/jquery.grab.js"></script>
@@ -32,9 +47,12 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="./css/jquery.button-audio-player.css" />
-    <script src="./js/jquery.button-audio-player.js"></script>
-
+    <!--    <link rel="stylesheet" href="./css/jquery.button-audio-player.css" />-->
+    <!--    <script src="./js/jquery.button-audio-player.js"></script>-->
+    <!--    <link rel="stylesheet" href="./css/progres-bar.css" />-->
+    <!--    <script src="./js/player.js"></script>-->
+<!--    <link href="dist/calamansi.min.css" rel="stylesheet"/>-->
+<!--    <script src="dist/calamansi.min.js"></script>-->
     <style>
         .text-default {
             color: black;
@@ -47,6 +65,8 @@
         .mb-10 {
             margin-bottom: 10px;
         }
+
+
     </style>
 
 </head>
@@ -104,10 +124,37 @@
                                 <div class="p-4">
                                     <div class="row">
                                         <div class="col-md-4 text-center">
-                                            <a id="bar" >
+                                            <a id="bar">
                                             </a>
                                         </div>
                                     </div>
+                                    <h3 class="text-default text-center timeMidi " style="display: none">0</h3>
+
+                                    <div id="jquery_jplayer_1" class="cp-jplayer"></div>
+                                    <div class="prototype-wrapper"> <!-- A wrapper to emulate use in a webpage and center align -->
+                                        <!-- The container for the interface can go where you want to display it. Show and hide it as you need. -->
+                                        <div id="cp_container_1" class="cp-container" style="height: 200px;">
+                                            <div class="cp-buffer-holder"> <!-- .cp-gt50 only needed when buffer is > than 50% -->
+                                                <div class="cp-buffer-1"></div>
+                                                <div class="cp-buffer-2"></div>
+                                            </div>
+                                            <div class="cp-progress-holder"> <!-- .cp-gt50 only needed when progress is > than 50% -->
+                                                <div class="cp-progress-1"></div>
+                                                <div class="cp-progress-2"></div>
+                                            </div>
+                                            <div class="cp-circle-control"></div>
+                                            <ul class="cp-controls">
+                                                <li><a class="cp-play" tabindex="1">play</a></li>
+                                                <li><a class="cp-pause" style="display:none;" tabindex="1">pause</a></li> <!-- Needs the inline style here, or jQuery.show() uses display:inline instead of display:block -->
+                                            </ul>
+                                        </div>
+                                        <div class="row mt-2 mb-2 text-center">
+                                            <button id='moreSeconds'
+                                                    class="btn btn-warning btn-user btn-block text-default">+1 segundo
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <div class="row" id="songs">
 
                                     </div>
@@ -151,7 +198,6 @@
                     </div>
                 </div>
             </div>
-
 
 
         </div>
