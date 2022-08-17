@@ -17,7 +17,7 @@ $(function () {
     $('#selectArtists').on('input', async function () {
         var search = $('#selectArtists').val();
         $.ajax({
-            url: 'http://127.0.0.1:30850/search/artists?q=' + encodeURI(search),
+            url: 'https://song-guess2.herokuapp.com/search/artists?q=' + encodeURI(search),
             method: 'get',
             dataType: 'json',
             beforeSend: function () {
@@ -57,7 +57,7 @@ $(function () {
 
     $(document).on('click', '.select-artist', function () {
         $.ajax({
-            url: 'http://127.0.0.1:30850/toptrack?q=' + encodeURI($(this).data('id')),
+            url: 'https://song-guess2.herokuapp.com/toptrack?q=' + encodeURI($(this).data('id')),
             method: 'get',
             dataType: 'json',
             beforeSend: function () {
@@ -99,7 +99,7 @@ $(function () {
         var search = $('#selectArtists').val();
 
         $.ajax({
-            url: 'http://127.0.0.1:30850/search/artists?q=' + encodeURI(search),
+            url: 'https://song-guess2.herokuapp.com/search/artists?q=' + encodeURI(search),
             method: 'get',
             dataType: 'json',
             beforeSend: function () {
