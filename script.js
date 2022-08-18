@@ -1,15 +1,36 @@
 var randomElement;
 var init_seconds = 1;
-var endpoint = 'https://song-guess2.herokuapp.com';
-// var endpoint = 'http://localhost:30850'
+// var endpoint = 'https://song-guess2.herokuapp.com';
+var endpoint = 'http://localhost:30850'
 var difficult = 0;
 
 SONGS = [];
 SONGS_SELECTED = [];
 artistName = '';
 
+random = false;
+
+GENRES = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "disco",
+    "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore",
+    "hardstyle", "heavy-metal", "hip-hop", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "mpb", "new-age", "new-release",
+    "opera", "pagode", "party","pop", "pop-film","power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba",
+    "sertanejo", "show-tunes", "singer-songwriter", "ska" , "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"]
+
 $(function () {
 
+
+    shuffledGENRE = GENRES.sort(() => 0.5 - Math.random());
+
+    shuffledGENRE.forEach(genre => {
+        $("#genres").append(`<div class='bg-grey select-genre' data-genre='${genre}'><a>${genre.slice(0, 1).toUpperCase() + genre.slice(1).replace('-',' ')}</a></div>`)
+    });
+
+    $('#genres').owlCarousel({
+        margin: 10,
+        loop: true,
+        autoWidth: true,
+        items: 4
+    })
 
     $.ajax({
         url: endpoint + '/code',
@@ -38,8 +59,7 @@ $(function () {
             beforeSend: function () {
             },
             success: function (response) {
-                console.log(response);
-                $('.owl-carousel').trigger("destroy.owl.carousel");
+                $('#artists').trigger("destroy.owl.carousel");
                 $('#artists').empty();
 
                 response.forEach(artist => {
@@ -52,7 +72,7 @@ $(function () {
                                 </a>
                             </div>`)
                 })
-                $('.owl-carousel').owlCarousel();
+                $('#artists').owlCarousel();
             }
         })
     })
@@ -65,9 +85,35 @@ $(function () {
         $('#artist_title').text(artistName);
     })
 
+    $(document).on('click', '.select-genre', function () {
+        random = true;
+        DIFF_SELECT.show(300);
+        SELECT_ARTIST.hide(300);
+        genre = $(this).data('genre');
+        getSongsByGenre(genre);
+        $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
+    })
+
     async function getSongsByArtist(artist) {
         $.ajax({
             url: endpoint + '/albums?q=' + encodeURI(artist),
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                dificult_select.hide();
+                LOADING.show(300);
+            },
+            success: function (response) {
+                dificult_select.show(300);
+                LOADING.hide(300);
+                SONGS = response;
+            }
+        });
+    }
+
+    async function getSongsByGenre(genre) {
+        $.ajax({
+            url: endpoint + '/random?q=' + encodeURI(genre),
             method: 'get',
             dataType: 'json',
             beforeSend: function () {
@@ -91,6 +137,7 @@ $(function () {
     async function setSongs() {
         const shuffled = SONGS.sort(() => 0.5 - Math.random());
         let selected = shuffled.slice(0, difficult);
+
 
         SONGS_SELECTED = selected.map(select => {
             return {
@@ -156,7 +203,7 @@ $(function () {
             var actual_song = SONGS_SELECTED[difficult - 1];
             Swal.fire({
                 title: `A Música era: `,
-                html: `<p>${actual_song.song}</p>`,
+                html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : '' }</p>`,
                 icon: 'error',
                 confirmButtonText: 'Próxima'
             }).then((result) => {
@@ -175,7 +222,7 @@ $(function () {
         GAME.hide(300);
         SONGS_SELECTED.forEach(song => {
             var emoji = song.win ? '&#9989;' : '&#10060;'
-            $('#answers').append(`<li >${song.song} - ${emoji} -  ${song.seconds}s</li>`)
+            $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : '' }  - ${emoji} -  ${song.seconds}s</li>`)
         })
         $("#win").show(300);
     }
@@ -193,7 +240,7 @@ $(function () {
         var actual_song = SONGS_SELECTED[difficult - 1];
         Swal.fire({
             title: `A Música era: `,
-            html: `<p>${actual_song.song}</p>`,
+            html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : '' }</p>`,
             icon: 'info',
             confirmButtonText: 'Próxima'
         }).then((result) => {
@@ -203,9 +250,11 @@ $(function () {
                 } else {
                     nextSong();
                 }
-                        }
+            }
         });
     })
+
+
 
 
     async function setMusic(song) {
@@ -232,8 +281,8 @@ $(function () {
             {
                 m4a: url,
             }, {
-                cssSelectorAncestor: "#cp_container_1"
-            });
+            cssSelectorAncestor: "#cp_container_1"
+        });
 
         myPlayer.player.bind($.jPlayer.event.timeupdate, function (event) {
             totalTimePlayed = event.jPlayer.status.currentTime;
@@ -251,11 +300,10 @@ $(function () {
             $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-song="${el.song}"> ${el.song} </button>`)
         })
 
-        setTimeout(function ()
-        {
+        setTimeout(function () {
             $("#jquery_jplayer_1").jPlayer('play');
 
-        },1000);
+        }, 1000);
     }
 
     function shuffle(array) {
