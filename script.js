@@ -208,15 +208,17 @@ $(function () {
         init_seconds = 1;
         var url = song.previewUrl;
         var song_name = song.song;
+
         var others = SONGS.filter(res => {
             if (res.song != song_name) {
                 return res;
             }
         })
+        shuffle(others);
 
         others = others.slice(0, 6);
         var options = others.concat(song);
-
+        console.log(options);
         $('#bar').empty();
 
 
