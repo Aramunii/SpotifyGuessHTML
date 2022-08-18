@@ -198,8 +198,12 @@ $(function () {
             confirmButtonText: 'Próxima'
         }).then((result) => {
             if (result.isConfirmed) {
-                nextSong();
-            }
+                if (difficult - 1 === 0) {
+                    finishGame();
+                } else {
+                    nextSong();
+                }
+                        }
         });
     })
 
