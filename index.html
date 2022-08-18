@@ -109,14 +109,15 @@
                                     <div class="p-4">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="m-0 font-weight-bold text-primary text-center mb-10">Selecione um artista</h4>
+                                                <h4 class="m-0 font-weight-bold text-primary text-center mb-10">
+                                                    Selecione um artista</h4>
                                                 <div class="form-group" style="margin-top: 20px;">
                                                     <input class="form-control form-control-user" value=""
                                                         id="selectArtists" type="text" name="artists"
                                                         placeholder="Procure uma banda ou artista">
                                                 </div>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -131,9 +132,10 @@
                                 <div class="col-lg-12">
                                     <div class="p-4">
                                         <div class="row">
-                                            
+
                                             <div class="col-md-12 text-center">
-                                                <h4 class="m-0 font-weight-bold text-primary text-center mb-10">Selecione um gênero</h4>
+                                                <h4 class="m-0 font-weight-bold text-primary text-center mb-10">
+                                                    Selecione um gênero</h4>
                                                 <div class="owl-carousel mt-10" id="genres">
                                                 </div>
                                             </div>
@@ -166,21 +168,59 @@
                                             <div class="col-md-4">
                                                 <div class="form-group" style="margin-top: 20px;">
                                                     <button
-                                                        class="btn btn-primary btn-user btn-block start-game">3</button>
+                                                        class="btn btn-primary btn-user btn-block select-diff">3</button>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group" style="margin-top: 20px;">
                                                     <button
-                                                        class="btn btn-primary btn-user btn-block start-game">5</button>
+                                                        class="btn btn-primary btn-user btn-block select-diff">5</button>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group" style="margin-top: 20px;">
                                                     <button
-                                                        class="btn btn-primary btn-user btn-block start-game">10</button>
+                                                        class="btn btn-primary btn-user btn-block select-diff">10</button>
+                                                </div>
+                                            </div>                                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modeSelect" style="display: none;">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary text-center">Qual modo de jogo?
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="p-4">
+                                       
+                                        <div class="row" id="difficult_select">
+                                            <div class="col-md-4">
+                                                <div class="form-group" style="margin-top: 20px;">
+                                                    <button
+                                                        class="btn btn-primary btn-user btn-block start-game" data-mode="music">Música</button>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group" style="margin-top: 20px;">
+                                                    <button
+                                                        class="btn btn-primary btn-user btn-block start-game" data-mode="artist">Artista</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group" style="margin-top: 20px;">
+                                                    <button
+                                                        class="btn btn-primary btn-user btn-block start-game" data-mode="all">Música e Artista</button>
+                                                </div>
+                                            </div>                                    
                                         </div>
                                     </div>
                                 </div>
@@ -257,6 +297,8 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <h1 id="artist_title" class="text-center">Supercombo</h1>
+                                                <h3 id="mode_game" class="text-center"></h1>
+
                                             </div>
                                         </div>
                                         <div class="row">
