@@ -1,7 +1,7 @@
 var randomElement;
 var init_seconds = 1;
-// var endpoint = 'https://song-guess2.herokuapp.com';
-var endpoint = 'http://localhost:30850'
+var endpoint = 'https://song-guess2.herokuapp.com';
+// var endpoint = 'http://localhost:30850'
 var difficult = 0;
 
 SONGS = [];
