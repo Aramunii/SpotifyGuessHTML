@@ -1,6 +1,6 @@
 var randomElement;
 var init_seconds = 1;
-var endpoint ='https://song-guess2.herokuapp.com';
+var endpoint = 'https://song-guess2.herokuapp.com';
 // var endpoint = 'http://localhost:30850'
 var difficult = 0;
 
@@ -18,7 +18,7 @@ $(function () {
         beforeSend: function () {
         },
         success: function (response) {
-                  }
+        }
     })
 
     var LOADING = $("#loading");
@@ -148,19 +148,24 @@ $(function () {
                 }
             });
         } else {
+            answer_secods = init_seconds;
+            init_seconds = 40;
+            SONGS_SELECTED[difficult - 1].win = false;
+            SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+            $("#jquery_jplayer_1").jPlayer('play');
+            var actual_song = SONGS_SELECTED[difficult - 1];
             Swal.fire({
-                title: `Você errou`,
-                html: ``,
+                title: `A Música era: `,
+                html: `<p>${actual_song.song}</p>`,
                 icon: 'error',
-                showDenyButton: true,
-                confirmButtonText: 'Continuar',
-                denyButtonText: `Novo Jogo`,
+                confirmButtonText: 'Próxima'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    init_seconds++;
-                    $("#jquery_jplayer_1").jPlayer('play');
-                } else if (result.isDenied) {
-                    window.location.reload();
+                    if (difficult - 1 === 0) {
+                        finishGame();
+                    } else {
+                        nextSong();
+                    }
                 }
             });
         }
@@ -175,8 +180,7 @@ $(function () {
         $("#win").show(300);
     }
 
-    $('.newGame').on('click',function ()
-    {
+    $('.newGame').on('click', function () {
         window.location.reload();
     })
 
@@ -186,7 +190,7 @@ $(function () {
         SONGS_SELECTED[difficult - 1].win = false;
         SONGS_SELECTED[difficult - 1].seconds = answer_secods;
         $("#jquery_jplayer_1").jPlayer('play');
-        var actual_song = SONGS_SELECTED[difficult-1];
+        var actual_song = SONGS_SELECTED[difficult - 1];
         Swal.fire({
             title: `A Música era: `,
             html: `<p>${actual_song.song}</p>`,
@@ -241,6 +245,11 @@ $(function () {
             $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-song="${el.song}"> ${el.song} </button>`)
         })
 
+        setTimeout(function ()
+        {
+            $("#jquery_jplayer_1").jPlayer('play');
+
+        },1000);
     }
 
     function shuffle(array) {
