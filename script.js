@@ -438,40 +438,58 @@ $(function () {
 
     $("#challenge").on('click', function () {
 
-        var challenge = {
-            song_selected: SONGS_SELECTED,
-            // SONGS: SONGS,
-            name: 'Desafiante',
-            difficult: difficult_selected,
-            mode: mode,
-            type_mode: type_mode,
-            artist: artistName,
-            query: query_string,
-            type_query: type_query
-        }
 
-        var challenge_string = JSON.stringify(challenge);
-        var encrypted = CryptoJS.AES.encrypt(challenge_string, key);
-        var settings = {
-            "url": endpoint + "/urlShort",
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "Content-Type": "application/x-www-form-urlencoded"
+        Swal.fire({
+            title: 'Digite o seu nome!',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
             },
-            "data": {
-                "code": '' + encrypted
+            showCancelButton: true,
+            confirmButtonText: 'Enviar desafio',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                var challenge = {
+                    song_selected: SONGS_SELECTED,
+                    // SONGS: SONGS,
+                    name: login,
+                    difficult: difficult_selected,
+                    mode: mode,
+                    type_mode: type_mode,
+                    artist: artistName,
+                    query: query_string,
+                    type_query: type_query
+                }
+
+                var challenge_string = JSON.stringify(challenge);
+                var encrypted = CryptoJS.AES.encrypt(challenge_string, key);
+                var settings = {
+                    "url": endpoint + "/urlShort",
+                    "method": "POST",
+                    "timeout": 0,
+                    "headers": {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    "data": {
+                        "code": '' + encrypted
+                    }
+                };
+
+                $.ajax(settings).done(function (response) {
+                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                });
+
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('Link copiado', 'Envie o link para o amigo!!', 'success');
             }
-        };
-
-        $.ajax(settings).done(function (response) {
-
-            copyStringToClipboard(response.url.shortLink);
-            console.log(response.url.shortLink);
-        });
+        })
 
 
-        Swal.fire('Link copiado', 'Envie o link para o amigo, não se assuste com o tamanho dele!', 'success');
+
+
     })
 
     async function setMusic(song) {
