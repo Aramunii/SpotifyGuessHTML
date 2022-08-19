@@ -394,8 +394,8 @@ $(function () {
                 $('#challenge_table').append(`
                 <tr>
                     <td>${song.song} ${random ? '- ' + song.artist : ''}  -</td>
-                    <td>${emoji} -  ${song.seconds}s</td>
-                    <td>${emoji2} -  ${json_challenge.song_selected[index].seconds}s</td>
+                    <td>${emoji} -  ${song.seconds.toFixed(2)}s</td>
+                    <td>${emoji2} -  ${json_challenge.song_selected[index].seconds.toFixed(2)}s</td>
                 </tr>`)
             })
             $("#win_challenge").show(300);
