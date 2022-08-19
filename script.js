@@ -6,6 +6,8 @@ var difficult = 0;
 var difficult_selected = 0;
 var totalTimePlayed = 0;
 var key = "something";
+var query_string = '';
+var type_query ='artist';
 
 SONGS = [];
 SONGS_SELECTED = [];
@@ -41,7 +43,7 @@ $(function () {
         $('#challenge_menu').show(300);
         SELECT_ARTIST.hide(300);
        var decrypted = CryptoJS.AES.decrypt(challenge.replaceAll(' ', "+"), key);
-       let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+        json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
         $('#name_challenge').text(json_challenge.name);
         
         if (json_challenge.mode == 'time') {
@@ -61,6 +63,13 @@ $(function () {
         difficult = json_challenge.difficult;
         $('#artist_title_challenge').text(json_challenge.artist);
         $('#challenger').text(json_challenge.name);
+
+        if(json_challenge.type_query =='artist')
+        {
+            getSongsByArtist(json_challenge.query);
+        }else{
+            getSongsByGenre(json_challenge.query);
+        }
 
     }
 
@@ -133,6 +142,8 @@ $(function () {
     })
 
     async function getSongsByArtist(artist) {
+        query_string = artist;
+        type_query = 'artist';
         $.ajax({
             url: endpoint + '/albums?q=' + encodeURI(artist),
             method: 'get',
@@ -140,11 +151,15 @@ $(function () {
             beforeSend: function () {
                 dificult_select.hide();
                 LOADING.show(300);
+                $('#challenge_start').hide();
+                $('#loading-challenge').show(300);
             },
             success: function (response) {
                 dificult_select.show(300);
                 LOADING.hide(300);
                 SONGS = response;
+                $('#challenge_start').show();
+                $('#loading-challenge').hide(300);
             }
         });
     }
@@ -160,6 +175,9 @@ $(function () {
     })
 
     async function getSongsByGenre(genre) {
+        query_string = genre;
+        type_query = 'artist';
+
         $.ajax({
             url: endpoint + '/random?q=' + encodeURI(genre),
             method: 'get',
@@ -167,11 +185,15 @@ $(function () {
             beforeSend: function () {
                 dificult_select.hide();
                 LOADING.show(300);
+                $('#challenge_start').hide();
+                $('#loading-challenge').show(300);
             },
             success: function (response) {
                 dificult_select.show(300);
                 LOADING.hide(300);
                 SONGS = response;
+                $('#challenge_start').show();
+                $('#loading-challenge').hide(300);
             }
         });
     }
@@ -418,12 +440,14 @@ $(function () {
 
         var challenge = {
             song_selected: SONGS_SELECTED,
-            SONGS: SONGS,
+            // SONGS: SONGS,
             name: 'Desafiante',
             difficult: difficult_selected,
             mode: mode,
             type_mode: type_mode,
             artist: artistName,
+            query: query_string,
+            type_query : type_query
         }
 
         var challenge_string = JSON.stringify(challenge);
