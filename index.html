@@ -19,7 +19,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="./node_modules/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gg-shortener-js@1.0.1/gg.min.js"></script>
 
     <style>
         body {
@@ -97,6 +98,38 @@
         <!-- Outer Row -->
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-12 col-md-9">
+
+
+                <div id="challenge_menu" style="display: none;">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary text-center">SpotyGuess</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="p-4">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h3 class="m-0 font-weight-bold text-primary text-center mb-10"> Você foi desafiado por <span class="text-danger" id="name_challenge"></span></h3>
+                                                <h4 class="m-0 font-weight-bold text-primary text-center mb-10"><span class="text-success" id="artist_name"></span></h3>
+                                                <h5 class="m-0 font-weight-bold text-primary text-center mb-10"> No modo <span class="text-warning" id="mode_name"> Contra o tempo</span></h5>
+
+                                                <div class="form-group" style="margin-top: 20px;">
+                                                    <button
+                                                    class="btn btn-primary btn-user btn-block acceptChallenge">Aceitar</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                   
+                    </div>
+                </div>
 
                 <div id="selectMenu" style="display: block;">
                     <div class="card o-hidden border-0 shadow-lg my-5">
@@ -194,33 +227,52 @@
                 <div id="modeSelect" style="display: none;">
                     <div class="card o-hidden border-0 shadow-lg my-5">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary text-center">Qual modo de jogo?
+                            <h6 class="m-0 font-weight-bold text-primary text-center">Configurações do jogo
                             </h6>
                         </div>
                         <div class="card-body p-0">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="p-4">
-                                       
-                                        <div class="row" id="difficult_select">
-                                            <div class="col-md-4">
-                                                <div class="form-group" style="margin-top: 20px;">
-                                                    <button
-                                                        class="btn btn-primary btn-user btn-block start-game" data-mode="music">Música</button>
+                                    <div class="p-4 text-center">
+                                        <div id="type_select">
+                                            <div class="row text-center"> <div class="col-md-12"> <h4>O que cê quer adivinhar ?</h4></div></div>
+                                            <div class="row" >
+                                                <div class="col-md-4">
+                                                    <div class="form-group" style="margin-top: 20px;">
+                                                        <button
+                                                            class="btn btn-primary btn-user btn-block type-game" data-mode="music">Música</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group" style="margin-top: 20px;">
+                                                        <button
+                                                            class="btn btn-primary btn-user btn-block type-game" data-mode="artist">Artista</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group" style="margin-top: 20px;">
+                                                        <button
+                                                            class="btn btn-primary btn-user btn-block type-game" data-mode="all">Música e Artista</button>
+                                                    </div>
+                                                </div>                                    
+                                            </div>
+                                        </div>
+                                        <div id="mode_select" style="display:none">
+                                            <div class="row text-center"> <div class="col-md-12"> <h4>Como cê quer jogar ?</h4></div></div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group" style="margin-top: 20px;">
+                                                        <button
+                                                            class="btn btn-primary btn-user btn-block mode-select" data-mode="default">Padrão</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group" style="margin-top: 20px;">
+                                                        <button
+                                                            class="btn btn-primary btn-user btn-block mode-select" data-mode="time">Contra o tempo</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group" style="margin-top: 20px;">
-                                                    <button
-                                                        class="btn btn-primary btn-user btn-block start-game" data-mode="artist">Artista</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group" style="margin-top: 20px;">
-                                                    <button
-                                                        class="btn btn-primary btn-user btn-block start-game" data-mode="all">Música e Artista</button>
-                                                </div>
-                                            </div>                                    
                                         </div>
                                     </div>
                                 </div>
@@ -245,7 +297,7 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        <h3 class="text-default text-center timeMidi " style="display: none">0</h3>
+                                        <h3 class="text-default text-center timeMidi" style="display: block">0</h3>
                                         <div id="jquery_jplayer_1" class="cp-jplayer"></div>
                                         <div class="prototype-wrapper">
                                             <div id="cp_container_1" class="cp-container" style="height: 200px;">
@@ -297,8 +349,8 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <h1 id="artist_title" class="text-center">Supercombo</h1>
-                                                <h3 id="mode_game" class="text-center"></h1>
-
+                                                <h3 id="mode_game" class="text-center"></h3>
+                                                <h3 id="type_mode" class="text-center"></h3>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -308,16 +360,12 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <!--                                        <div class="col-lg-12">-->
-                                            <!--                                            <h4 class="text-center">Pontuação: <span-->
-                                            <!--                                                    id="count_play"><b>2/3</b></span></h4>-->
-                                            <!--                                        </div>-->
-                                        </div>
                                         <div class="form-group" style="margin-top: 20px;">
                                             <button onclick="window.location.reload()"
                                                 class="btn btn-primary btn-user btn-block share">Novo
                                                 jogo</button>
+                                                <button
+                                                class="btn btn-danger btn-user btn-block " id="challenge">Desafiar um amigo</button>
                                             <a id="payDev" style="display: block;"
                                                 href="https://nubank.com.br/pagar/56hu3/lHYlQvDAmm"
                                                 class="btn btn-gradient-warning text-white bg-gradient-warning btn-user btn-block">Ajudar
@@ -329,10 +377,63 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
+                <div id="win_challenge" style="display: none">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary text-center">Obrigado por jogar!
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row text-default">
+                                <div class="col-lg-12">
+                                    <div class="p-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h1 id="artist_title_challenge" class="text-center">Supercombo</h1>
+                                                <h3 id="mode_game" class="text-center"></h3>
+                                                <h3 id="type_mode" class="text-center"></h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <table id="challenge_table">
+                                                    <tr>
+                                                      <th  style="width: 187px; padding:0;">Música</th>
+                                                      <th style="width: 100px; padding:0;">Você</th>
+                                                      <th id="challenger"></th>
+                                                    </tr>
+                                                    <!-- <tr>
+                                                      <td>FUCK THE SYSTEM </td>
+                                                      <td>&#9989; 0.4s</td>
+                                                      <td>&#10060; 2.9s</td>
+                                                    </tr> -->
+                                                
+                                                  </table>
+                                                <ul id="answers" class="text-center">
 
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 20px;">
+                                            <button onclick="window.location.reload()"
+                                                class="btn btn-primary btn-user btn-block share">Novo
+                                                jogo</button>
+                                                <button
+                                                class="btn btn-danger btn-user btn-block " id="challenge">Desafiar um amigo</button>
+                                            <a id="payDev" style="display: block;"
+                                                href="https://nubank.com.br/pagar/56hu3/lHYlQvDAmm"
+                                                class="btn btn-gradient-warning text-white bg-gradient-warning btn-user btn-block">Ajudar
+                                                o desenvolvedor</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -3,15 +3,21 @@ var init_seconds = 1;
 var endpoint = 'https://song-guess2.herokuapp.com';
 // var endpoint = 'http://localhost:30850'
 var difficult = 0;
+var difficult_selected = 0;
+var totalTimePlayed = 0;
+var key = "something";
 
 SONGS = [];
 SONGS_SELECTED = [];
+CHALLENGER_SONGS = [];
 artistName = '';
 
 random = false;
+challenger = false;
 
-mode = 'song';
-
+mode = 'default';
+type_mode = 'music';
+json_challenge = [];
 GENRES = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "disco",
     "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore",
     "hardstyle", "heavy-metal", "hip-hop", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "mpb", "new-age", "new-release",
@@ -19,8 +25,52 @@ GENRES = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime",
     "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"]
 
 $(function () {
+    /* INICIA VARIAVEIS */
+    var LOADING = $("#loading");
+    var dificult_select = $("#difficult_select");
+    var DIFF_SELECT = $('#dificultSelect');
+    var GAME = $("#game");
+    var SELECT_ARTIST = $('#selectMenu');
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const challenge = urlParams.get('challenge')
+
+    if (challenge) {
+        challenger = true;
+        $('#challenge_menu').show(300);
+        SELECT_ARTIST.hide(300);
+       var decrypted = CryptoJS.AES.decrypt(challenge.replaceAll(' ', "+"), key);
+       let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+        $('#name_challenge').text(json_challenge.name);
+        
+        if (json_challenge.mode == 'time') {
+            $('#mode_name').text('Contra o tempo');
+        } else {
+            $('#mode_name').text('Padrão');
+        }
+        $('#artist_name').text(json_challenge.artist);
+
+        SONGS_SELECTED = json_challenge.song_selected.slice();
+        CHALLENGER_SONGS = new Array( json_challenge.song_selected);
+
+        SONGS = json_challenge.SONGS;
+
+        type_mode = json_challenge.type_mode;
+        mode = json_challenge.mode;
+        difficult = json_challenge.difficult;
+        $('#artist_title_challenge').text(json_challenge.artist);
+        $('#challenger').text(json_challenge.name);
+
+    }
+
+    $('.acceptChallenge').on('click', function () {
+        $('#challenge_menu').hide(300);
+        startGame();
+    })
 
 
+    /* RANDOMIZA O GÊNERO E PEGA O AUTH  */
     shuffledGENRE = GENRES.sort(() => 0.5 - Math.random());
 
     shuffledGENRE.forEach(genre => {
@@ -44,14 +94,9 @@ $(function () {
         }
     })
 
-    var LOADING = $("#loading");
-    var dificult_select = $("#difficult_select");
-    var DIFF_SELECT = $('#dificultSelect');
-    var GAME = $("#game");
-    var SELECT_ARTIST = $('#selectMenu');
-    $('.owl-carousel').owlCarousel();
 
-    /* TELA DE ESCOLHER O ARTISTA  */
+
+    /* TELA DE ESCOLHER O ARTISTA OU GÊNERO  */
     $('#selectArtists').on('input', async function () {
         var search = $('#selectArtists').val();
         $.ajax({
@@ -87,15 +132,6 @@ $(function () {
         $('#artist_title').text(artistName);
     })
 
-    $(document).on('click', '.select-genre', function () {
-        random = true;
-        DIFF_SELECT.show(300);
-        SELECT_ARTIST.hide(300);
-        genre = $(this).data('genre');
-        getSongsByGenre(genre);
-        $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
-    })
-
     async function getSongsByArtist(artist) {
         $.ajax({
             url: endpoint + '/albums?q=' + encodeURI(artist),
@@ -112,6 +148,16 @@ $(function () {
             }
         });
     }
+
+    $(document).on('click', '.select-genre', function () {
+        random = true;
+        DIFF_SELECT.show(300);
+        SELECT_ARTIST.hide(300);
+        genre = $(this).data('genre');
+        getSongsByGenre(genre);
+        $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
+        artistName = genre.slice(0, 1).toUpperCase() + genre.slice(1);
+    })
 
     async function getSongsByGenre(genre) {
         $.ajax({
@@ -133,15 +179,9 @@ $(function () {
     /*  TElA DE ESCOLHER MODO DE JOGO*/
     $('.select-diff').on('click', function () {
         difficult = parseInt($(this).text())
+        difficult_selected = parseInt($(this).text())
+
         setSongs();
-    })
-
-    $('.start-game').on('click',function(){
-        mode = $(this).data('mode');
-        $('#mode_game').text($(this).text());
-        startGame();
-        $("#modeSelect").hide(300);
-
     })
 
     async function setSongs() {
@@ -161,9 +201,29 @@ $(function () {
 
         DIFF_SELECT.hide(300);
         $("#modeSelect").show(300);
+        if (!random) {
+            $('#type_select').hide(300);
+            $('#mode_select').show(300);
+        }
     }
 
+
+    $('.type-game').on('click', function () {
+        type_mode = $(this).data('mode');
+        $('#type_mode').text($(this).text());
+        $('#type_select').hide(300);
+        $('#mode_select').show(300);
+    })
+
+    $('.mode-select').on('click', function () {
+        mode = $(this).data('mode');
+        $('#mode_game').text($(this).text());
+        startGame();
+    })
+
+
     async function startGame() {
+        $("#modeSelect").hide(300);
         DIFF_SELECT.hide(300);
         GAME.show(300);
         setMusic(SONGS_SELECTED[difficult - 1])
@@ -172,6 +232,9 @@ $(function () {
     async function nextSong() {
         difficult--;
         setMusic(SONGS_SELECTED[difficult - 1])
+        if (mode == 'time') {
+            $('.timeMidi').show();
+        }
     }
 
 
@@ -183,17 +246,18 @@ $(function () {
     $(document).on('click', '.guess-song', function () {
         var actual_song = SONGS_SELECTED[difficult - 1];
 
-        if(mode != 'artist')
-        {
+        if (type_mode != 'artist') {
             if ($(this).data('song') == actual_song.song) {
-                answer_secods = init_seconds;
+                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
                 init_seconds = 40;
-    
+                totalTimePlayed = 0;
+
                 SONGS_SELECTED[difficult - 1].win = true;
                 SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-    
+
+                $('.timeMidi').hide();
                 $("#jquery_jplayer_1").jPlayer('play');
-    
+
                 Swal.fire({
                     title: `${actual_song.song}`,
                     html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
@@ -209,12 +273,18 @@ $(function () {
                     }
                 });
             } else {
-                answer_secods = init_seconds;
+                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
                 init_seconds = 40;
+                totalTimePlayed = 0;
+
                 SONGS_SELECTED[difficult - 1].win = false;
                 SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+
+                $('.timeMidi').hide();
                 $("#jquery_jplayer_1").jPlayer('play');
+
                 var actual_song = SONGS_SELECTED[difficult - 1];
+
                 Swal.fire({
                     title: `A Música era: `,
                     html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
@@ -230,18 +300,20 @@ $(function () {
                     }
                 });
             }
-    
-        }else{
+
+        } else {
 
             if ($(this).data('artist') == actual_song.artist) {
-                answer_secods = init_seconds;
+                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
                 init_seconds = 40;
-    
+                totalTimePlayed = 0;
+
                 SONGS_SELECTED[difficult - 1].win = true;
                 SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-    
+
+                $('.timeMidi').hide();
                 $("#jquery_jplayer_1").jPlayer('play');
-    
+
                 Swal.fire({
                     title: `${actual_song.song}`,
                     html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
@@ -257,11 +329,16 @@ $(function () {
                     }
                 });
             } else {
-                answer_secods = init_seconds;
+                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
                 init_seconds = 40;
+                totalTimePlayed = 0;
+
                 SONGS_SELECTED[difficult - 1].win = false;
                 SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+
+                $('.timeMidi').hide();
                 $("#jquery_jplayer_1").jPlayer('play');
+
                 var actual_song = SONGS_SELECTED[difficult - 1];
                 Swal.fire({
                     title: `A Música era: `,
@@ -278,21 +355,36 @@ $(function () {
                     }
                 });
             }
-    
-
         }
-
-
-
     });
 
     async function finishGame() {
         GAME.hide(300);
-        SONGS_SELECTED.forEach(song => {
-            var emoji = song.win ? '&#9989;' : '&#10060;'
-            $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : ''}  - ${emoji} -  ${song.seconds}s</li>`)
-        })
-        $("#win").show(300);
+
+        if(challenger)
+        {
+            var decrypted = CryptoJS.AES.decrypt(challenge.replaceAll(' ', "+"), key);
+            let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+
+            SONGS_SELECTED.forEach((song,index) => {
+                var emoji = song.win ? '&#9989;' : '&#10060;'
+                var emoji2 = json_challenge.song_selected[index].win ? '&#9989;' : '&#10060;'
+                $('#challenge_table').append(`
+                <tr>
+                    <td>${song.song} ${random ? '- ' + song.artist : ''}  -</td>
+                    <td>${emoji} -  ${song.seconds}s</td>
+                    <td>${emoji2} -  ${json_challenge.song_selected[index].seconds}s</td>
+                </tr>`)
+            })
+            $("#win_challenge").show(300);
+        }else{
+            SONGS_SELECTED.forEach(song => {
+                var emoji = song.win ? '&#9989;' : '&#10060;'
+                $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : ''}  - ${emoji} -  ${song.seconds}s</li>`)
+            })
+            $("#win").show(300);
+        }
+
     }
 
     $('.newGame').on('click', function () {
@@ -322,8 +414,26 @@ $(function () {
         });
     })
 
+    $("#challenge").on('click', function () {
+
+        var challenge = {
+            song_selected: SONGS_SELECTED,
+            SONGS: SONGS,
+            name: 'Desafiante',
+            difficult: difficult_selected,
+            mode: mode,
+            type_mode: type_mode,
+            artist: artistName,
+        }
+
+        var challenge_string = JSON.stringify(challenge);
+        var encrypted = CryptoJS.AES.encrypt(challenge_string, key);
 
 
+
+        copyStringToClipboard(window.location.href + '?challenge=' + encrypted );
+        Swal.fire('Link copiado','Envie o link para o amigo, não se assuste com o tamanho dele!','success');
+    })
 
     async function setMusic(song) {
         init_seconds = 1;
@@ -335,6 +445,7 @@ $(function () {
                 return res;
             }
         })
+
         shuffle(others);
 
         others = others.slice(0, 6);
@@ -353,10 +464,16 @@ $(function () {
         });
 
         myPlayer.player.bind($.jPlayer.event.timeupdate, function (event) {
-            totalTimePlayed = event.jPlayer.status.currentTime;
-            $('.timeMidi').text(totalTimePlayed);
-            if (event.jPlayer.status.currentTime > init_seconds) {
-                $(this).jPlayer('stop');
+
+            if (mode == 'default') {
+                $('.timeMidi').hide();
+                if (event.jPlayer.status.currentTime > init_seconds) {
+                    $(this).jPlayer('stop');
+                }
+            } else if (mode == 'time') {
+                $('#moreSeconds').hide();
+                totalTimePlayed = event.jPlayer.status.currentTime;
+                $('.timeMidi').text(totalTimePlayed);
             }
         })
 
@@ -364,17 +481,16 @@ $(function () {
 
         $('#songs').empty();
 
-        if(mode == 'music')
-        {
+        if (type_mode == 'music') {
             options.forEach(el => {
                 $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-song="${el.song}"> ${el.song} </button>`)
             })
-    
-        }else if(mode=='artist'){
+
+        } else if (type_mode == 'artist') {
             options.forEach(el => {
                 $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-artist="${el.artist}"> ${el.artist}</button>`)
             })
-        }else{
+        } else {
             options.forEach(el => {
                 $('#songs').append(`<button class="btn btn-primary btn-user mr-1 mt-1 guess-song" data-song="${el.song}"> ${el.song}  ${random ? '- ' + el.artist : ''}</button>`)
             })
@@ -383,8 +499,8 @@ $(function () {
 
         setTimeout(function () {
             $("#jquery_jplayer_1").jPlayer('play');
-
         }, 1000);
+
     }
 
     function shuffle(array) {
@@ -404,4 +520,23 @@ $(function () {
 
         return array;
     }
+
+
+    function copyStringToClipboard(str) {
+        // Create new element
+        var el = document.createElement('textarea');
+        // Set value (string to be copied)
+        el.value = str;
+        // Set non-editable to avoid focus and move outside of view
+        el.setAttribute('readonly', '');
+        el.style = { position: 'absolute', left: '-9999px' };
+        document.body.appendChild(el);
+        // Select text inside element
+        el.select();
+        // Copy text to clipboard
+        document.execCommand('copy');
+        // Remove temporary element
+        document.body.removeChild(el);
+    }
+
 })
