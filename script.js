@@ -410,7 +410,7 @@ $(function () {
     }
 
     $('.newGame').on('click', function () {
-        window.location.reload();
+        window.location.href = 'https://aramunii.github.io/SpotifyGuessHTML/';
     })
 
     $('#nextSong').on('click', function () {
