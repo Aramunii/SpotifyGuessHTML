@@ -385,7 +385,10 @@ $(function () {
         GAME.hide(300);
 
         if (challenger) {
-            var decrypted = CryptoJS.AES.decrypt(challenge.replaceAll(' ', "+"), key);
+
+            new_challenge = challenge.replaceAll('-', "+")
+            new_challenge = new_challenge.replaceAll('_', "/")
+            var decrypted = CryptoJS.AES.decrypt(new_challenge, key);
             let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
             SONGS_SELECTED.forEach((song, index) => {
