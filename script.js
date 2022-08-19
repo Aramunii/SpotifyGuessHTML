@@ -439,7 +439,7 @@ $(function () {
         });
     })
 
-    $("#challenge").on('click', function () {
+    $(".challenge").on('click', function () {
 
 
         Swal.fire({
