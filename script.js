@@ -176,7 +176,7 @@ $(function () {
 
     async function getSongsByGenre(genre) {
         query_string = genre;
-        type_query = 'artist';
+        type_query = 'genre';
 
         $.ajax({
             url: endpoint + '/random?q=' + encodeURI(genre),
