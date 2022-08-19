@@ -7,7 +7,7 @@ var difficult_selected = 0;
 var totalTimePlayed = 0;
 var key = "something";
 var query_string = '';
-var type_query ='artist';
+var type_query = 'artist';
 
 SONGS = [];
 SONGS_SELECTED = [];
@@ -42,10 +42,12 @@ $(function () {
         challenger = true;
         $('#challenge_menu').show(300);
         SELECT_ARTIST.hide(300);
-       var decrypted = CryptoJS.AES.decrypt(challenge.replaceAll(' ', "+"), key);
+        new_challenge = challenge.replaceAll('-', "+")
+        new_challenge = new_challenge.replaceAll('_', "/")
+        var decrypted = CryptoJS.AES.decrypt(new_challenge, key);
         json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
         $('#name_challenge').text(json_challenge.name);
-        
+
         if (json_challenge.mode == 'time') {
             $('#mode_name').text('Contra o tempo');
         } else {
@@ -54,7 +56,7 @@ $(function () {
         $('#artist_name').text(json_challenge.artist);
 
         SONGS_SELECTED = json_challenge.song_selected.slice();
-        CHALLENGER_SONGS = new Array( json_challenge.song_selected);
+        CHALLENGER_SONGS = new Array(json_challenge.song_selected);
 
         SONGS = json_challenge.SONGS;
 
@@ -64,10 +66,9 @@ $(function () {
         $('#artist_title_challenge').text(json_challenge.artist);
         $('#challenger').text(json_challenge.name);
 
-        if(json_challenge.type_query =='artist')
-        {
+        if (json_challenge.type_query == 'artist') {
             getSongsByArtist(json_challenge.query);
-        }else{
+        } else {
             getSongsByGenre(json_challenge.query);
         }
 
@@ -383,12 +384,11 @@ $(function () {
     async function finishGame() {
         GAME.hide(300);
 
-        if(challenger)
-        {
+        if (challenger) {
             var decrypted = CryptoJS.AES.decrypt(challenge.replaceAll(' ', "+"), key);
             let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
-            SONGS_SELECTED.forEach((song,index) => {
+            SONGS_SELECTED.forEach((song, index) => {
                 var emoji = song.win ? '&#9989;' : '&#10060;'
                 var emoji2 = json_challenge.song_selected[index].win ? '&#9989;' : '&#10060;'
                 $('#challenge_table').append(`
@@ -399,7 +399,7 @@ $(function () {
                 </tr>`)
             })
             $("#win_challenge").show(300);
-        }else{
+        } else {
             SONGS_SELECTED.forEach(song => {
                 var emoji = song.win ? '&#9989;' : '&#10060;'
                 $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : ''}  - ${emoji} -  ${song.seconds}s</li>`)
@@ -447,16 +447,31 @@ $(function () {
             type_mode: type_mode,
             artist: artistName,
             query: query_string,
-            type_query : type_query
+            type_query: type_query
         }
 
         var challenge_string = JSON.stringify(challenge);
         var encrypted = CryptoJS.AES.encrypt(challenge_string, key);
+        var settings = {
+            "url": endpoint + "/urlShort",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            "data": {
+                "code": '' + encrypted
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+
+            copyStringToClipboard(response.url.shortLink);
+            console.log(response.url.shortLink);
+        });
 
 
-
-        copyStringToClipboard(window.location.href + '?challenge=' + encrypted );
-        Swal.fire('Link copiado','Envie o link para o amigo, não se assuste com o tamanho dele!','success');
+        Swal.fire('Link copiado', 'Envie o link para o amigo, não se assuste com o tamanho dele!', 'success');
     })
 
     async function setMusic(song) {
