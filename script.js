@@ -583,6 +583,8 @@ $(function () {
 
 
     function copyStringToClipboard(str) {
+window.prompt("Copie e envie para desafiar alguém ", str);
+
     navigator.clipboard.writeText(str);
 
     }
