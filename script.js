@@ -8,6 +8,7 @@ var totalTimePlayed = 0;
 var key = "something";
 var query_string = '';
 var type_query = 'artist';
+var urlchall = '';
 
 SONGS = [];
 SONGS_SELECTED = [];
@@ -479,6 +480,7 @@ $(function () {
                 };
 
                 $.ajax(settings).done(function (response) {
+urlchall = response.url.shortLink
                     copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
                 });
 
@@ -487,7 +489,7 @@ $(function () {
         }).then((result) => {
             if (result.isConfirmed) {
 
-                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + urlchall);
 
                 Swal.fire('Link copiado', 'Envie o link para o amigo!!', 'success');
             }
