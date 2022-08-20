@@ -479,7 +479,7 @@ $(function () {
                 };
 
                 $.ajax(settings).done(function (response) {
-                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                    copyTextToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
                 });
 
             },
@@ -581,12 +581,39 @@ $(function () {
         return array;
     }
 
+function fallbackCopyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
+  
+  // Avoid scrolling to bottom
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
 
-    function copyStringToClipboard(str) {
-window.prompt("Copie e envie para desafiar alguém ", str);
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
 
-    navigator.clipboard.writeText(str);
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
 
-    }
+  document.body.removeChild(textArea);
+}
+function copyTextToClipboard(text) {
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
+}
 
 })
