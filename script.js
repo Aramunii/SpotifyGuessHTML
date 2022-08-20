@@ -609,6 +609,7 @@ $(function () {
         })
 
         myPlayer.player.bind($.jPlayer.event.seeked, function (event) {
+          if(mode == 'time'){
             Swal.fire({
                 title: 'Você não pode trapacear!!!',
                 text: "",
@@ -624,7 +625,7 @@ $(function () {
                         nextSong();
                     }
                 }
-            })
+            })}
         })
 
         shuffle(options);
