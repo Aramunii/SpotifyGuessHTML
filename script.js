@@ -67,7 +67,7 @@ $(function () {
         type_mode = json_challenge.type_mode;
         mode = json_challenge.mode;
         difficult = json_challenge.difficult;
-        artistName = son_challenge.artist
+        artistName = json_challenge.artist
         $('#artist_title_challenge').text(json_challenge.artist);
         $('#challenger').text(json_challenge.name);
 
