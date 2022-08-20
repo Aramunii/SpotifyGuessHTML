@@ -479,9 +479,9 @@ $(function () {
                     }
                 };
 
-            await   $.ajax(settings).done(function (response) {
+            await   $.ajax(settings).done(async function (response) {
 urlchall = response.url.shortLink
-                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                  await  copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
                 });
 
             },
