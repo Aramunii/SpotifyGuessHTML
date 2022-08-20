@@ -515,7 +515,7 @@ alert(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaix
 
         shuffle(others);
 
-        others = others.slice(0, 6);
+        others = others.slice(0, 3);
         var options = others.concat(song);
         console.log(options);
         $('#bar').empty();
