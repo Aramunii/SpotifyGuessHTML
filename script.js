@@ -479,13 +479,16 @@ $(function () {
                 };
 
                 $.ajax(settings).done(function (response) {
-                    copyTextToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
                 });
 
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
+
+                    copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+
                 Swal.fire('Link copiado', 'Envie o link para o amigo!!', 'success');
             }
         })
@@ -604,13 +607,22 @@ function fallbackCopyTextToClipboard(text) {
 
   document.body.removeChild(textArea);
 }
-function copyTextToClipboard(text) {
 
-navigator.clipboard.writeText(text).then(function() {
-  alert('Async: Copying to clipboard was successful!');
-}, function(err) {
-  alert('Async: Could not copy text: ', err);
-});
-}
+   function copyStringToClipboard(str) {
+        // Create new element
+        var el = document.createElement('textarea');
+        // Set value (string to be copied)
+        el.value = str;
+        // Set non-editable to avoid focus and move outside of view
+        el.setAttribute('readonly', '');
+        el.style = { position: 'absolute', left: '-9999px' };
+        document.body.appendChild(el);
+        // Select text inside element
+        el.select();
+        // Copy text to clipboard
+        document.execCommand('copy');
+        // Remove temporary element
+        document.body.removeChild(el);
+    }
 
 })
