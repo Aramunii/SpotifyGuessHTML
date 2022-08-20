@@ -440,7 +440,7 @@ $(function () {
         });
     })
 
-    $(".challenge").on('click', function () {
+    $(".challenge").on('click', async function () {
 
 
         Swal.fire({
@@ -465,6 +465,7 @@ $(function () {
                     type_query: type_query
                 }
 
+
                 var challenge_string = JSON.stringify(challenge);
                 var encrypted = CryptoJS.AES.encrypt(challenge_string, key);
                 var settings = {
@@ -478,25 +479,31 @@ $(function () {
                         "code": '' + encrypted
                     }
                 };
-
-            await   $.ajax(settings).done(async function (response) {
-urlchall = response.url.shortLink
-                  await  copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
-alert(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink)
-                  await  copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                await $.ajax(settings).done(async function (response) {
+                    urlchall = response.url.shortLink
+                    // await copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
+                    // alert(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink)
+                    // await copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
                 });
 
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-
-                    //copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + urlchall);
-
-                Swal.fire('Link copiado', 'Envie o link para o amigo!!', 'success');
+                Swal.fire({
+                    title: 'Seu desafio está pronto',
+                    text: "Copie e envie para desafiar alguem!",
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Copiar desafio!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + urlchall);
+                        Swal.fire('Link copiado', '', 'success');
+                    }
+                })
             }
         })
-
 
 
 
@@ -588,31 +595,31 @@ alert(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaix
         return array;
     }
 
-function fallbackCopyTextToClipboard(text) {
-  var textArea = document.createElement("textarea");
-  textArea.value = text;
-  
-  // Avoid scrolling to bottom
-  textArea.style.top = "0";
-  textArea.style.left = "0";
-  textArea.style.position = "fixed";
+    function fallbackCopyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
 
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
 
-  try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Fallback: Copying text command was ' + msg);
-  } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
-  }
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
 
-  document.body.removeChild(textArea);
-}
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Fallback: Copying text command was ' + msg);
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
 
-   function copyStringToClipboard(str) {
+        document.body.removeChild(textArea);
+    }
+
+    function copyStringToClipboard(str) {
         // Create new element
         var el = document.createElement('textarea');
         // Set value (string to be copied)
