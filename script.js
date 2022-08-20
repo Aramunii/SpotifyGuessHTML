@@ -605,15 +605,12 @@ function fallbackCopyTextToClipboard(text) {
   document.body.removeChild(textArea);
 }
 function copyTextToClipboard(text) {
-  if (!navigator.clipboard) {
-    fallbackCopyTextToClipboard(text);
-    return;
-  }
-  navigator.clipboard.writeText(text).then(function() {
-    console.log('Async: Copying to clipboard was successful!');
-  }, function(err) {
-    console.error('Async: Could not copy text: ', err);
-  });
+
+navigator.clipboard.writeText(text).then(function() {
+  alert('Async: Copying to clipboard was successful!');
+}, function(err) {
+  alert('Async: Could not copy text: ', err);
+});
 }
 
 })
