@@ -9,6 +9,7 @@ var key = "something";
 var query_string = '';
 var type_query = 'artist';
 var urlchall = '';
+var seeked = false;
 
 SONGS = [];
 SONGS_SELECTED = [];
@@ -66,7 +67,7 @@ $(function () {
         type_mode = json_challenge.type_mode;
         mode = json_challenge.mode;
         difficult = json_challenge.difficult;
-
+        artistName = son_challenge.artist
         $('#artist_title_challenge').text(json_challenge.artist);
         $('#challenger').text(json_challenge.name);
 
@@ -413,6 +414,10 @@ $(function () {
             $("#win").show(300);
         }
 
+        if (difficult_selected > 5) {
+            $('.challenge').hide();
+
+        }
     }
 
     $('.newGame').on('click', function () {
@@ -507,10 +512,55 @@ $(function () {
                 })
             }
         })
-
-
-
     })
+
+
+    $('.share-result').on('click', function () {
+        shareResult();
+    })
+
+    async function shareResult() {
+        if (challenge) {
+            Swal.fire({
+                title: 'Digite o seu nome!',
+                input: 'text',
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Compartilhar resultado',
+                preConfirm: async (login) => {
+                    var my_result = '';
+                    var challenge_result = '';
+
+                    new_challenge = challenge.replaceAll('-', "+")
+                    new_challenge = new_challenge.replaceAll('_', "/")
+                    var decrypted = CryptoJS.AES.decrypt(new_challenge, key);
+                    let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+
+                    SONGS_SELECTED.reverse().forEach((song, index) => {
+                        my_result += song.win ? '🟩 ' : '🟥 '
+                        challenge_result += json_challenge.song_selected[index].win ? '🟩 ' : '🟥 '
+                    })
+
+                    copyStringToClipboard(`Desafio *${artistName}* no SongGuess!\n\n*${login}* ${my_result}\n\n*${json_challenge.name}* ${challenge_result}\n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
+                    Swal.fire('Copiado', '', 'success');
+                },
+            })
+        } else {
+            var my_result = '';
+
+            SONGS_SELECTED.reverse().forEach((song, index) => {
+                my_result += song.win ? '🟩 ' : '🟥 '
+            })
+
+            copyStringToClipboard(`Meu resultado em  *${artistName}* no SongGuess!\n\n🎵 ${my_result} \n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
+            Swal.fire('Copiado', '', 'success');
+        }
+
+    }
+
+
 
     async function setMusic(song) {
         init_seconds = 1;
@@ -550,6 +600,31 @@ $(function () {
                 totalTimePlayed = event.jPlayer.status.currentTime;
                 $('.timeMidi').text(totalTimePlayed.toFixed(2));
             }
+        })
+
+        myPlayer.player.bind($.jPlayer.event.pause, function (event) {
+            if (mode == 'time' && event.jPlayer.status.currentTime < 29) {
+                $(this).jPlayer('play');
+            }
+        })
+
+        myPlayer.player.bind($.jPlayer.event.seeked, function (event) {
+            Swal.fire({
+                title: 'Você não pode trapacear!!!',
+                text: "",
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Próxima',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (difficult - 1 === 0) {
+                        finishGame();
+                    } else {
+                        nextSong();
+                    }
+                }
+            })
         })
 
         shuffle(options);
