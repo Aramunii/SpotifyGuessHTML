@@ -39,14 +39,17 @@ $(function () {
     const urlParams = new URLSearchParams(queryString);
     const challenge = urlParams.get('challenge')
 
+    /* SE FOR DE UM DESAFIO */
     if (challenge) {
         challenger = true;
         $('#challenge_menu').show(300);
         SELECT_ARTIST.hide(300);
+
         new_challenge = challenge.replaceAll('-', "+")
         new_challenge = new_challenge.replaceAll('_', "/")
         var decrypted = CryptoJS.AES.decrypt(new_challenge, key);
         json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+
         $('#name_challenge').text(json_challenge.name);
 
         if (json_challenge.mode == 'time') {
@@ -58,12 +61,12 @@ $(function () {
 
         SONGS_SELECTED = json_challenge.song_selected.slice();
         CHALLENGER_SONGS = new Array(json_challenge.song_selected);
-
         SONGS = json_challenge.SONGS;
 
         type_mode = json_challenge.type_mode;
         mode = json_challenge.mode;
         difficult = json_challenge.difficult;
+
         $('#artist_title_challenge').text(json_challenge.artist);
         $('#challenger').text(json_challenge.name);
 
@@ -72,14 +75,12 @@ $(function () {
         } else {
             getSongsByGenre(json_challenge.query);
         }
-
     }
 
     $('.acceptChallenge').on('click', function () {
         $('#challenge_menu').hide(300);
         startGame();
     })
-
 
     /* RANDOMIZA O GÊNERO E PEGA O AUTH  */
     shuffledGENRE = GENRES.sort(() => 0.5 - Math.random());
@@ -104,8 +105,6 @@ $(function () {
         success: function (response) {
         }
     })
-
-
 
     /* TELA DE ESCOLHER O ARTISTA OU GÊNERO  */
     $('#selectArtists').on('input', async function () {
@@ -231,7 +230,6 @@ $(function () {
         }
     }
 
-
     $('.type-game').on('click', function () {
         type_mode = $(this).data('mode');
         $('#type_mode').text($(this).text());
@@ -286,7 +284,8 @@ $(function () {
                     title: `${actual_song.song}`,
                     html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
                     icon: 'success',
-                    confirmButtonText: 'Próxima'
+                    confirmButtonText: 'Próxima',
+                    allowOutsideClick: false,
                 }).then((result) => {
                     if (result.isConfirmed) {
                         if (difficult - 1 === 0) {
@@ -313,7 +312,8 @@ $(function () {
                     title: `A Música era: `,
                     html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
                     icon: 'error',
-                    confirmButtonText: 'Próxima'
+                    confirmButtonText: 'Próxima',
+                    allowOutsideClick: false,
                 }).then((result) => {
                     if (result.isConfirmed) {
                         if (difficult - 1 === 0) {
@@ -342,7 +342,8 @@ $(function () {
                     title: `${actual_song.song}`,
                     html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
                     icon: 'success',
-                    confirmButtonText: 'Próxima'
+                    confirmButtonText: 'Próxima',
+                    allowOutsideClick: false,
                 }).then((result) => {
                     if (result.isConfirmed) {
                         if (difficult - 1 === 0) {
@@ -368,7 +369,8 @@ $(function () {
                     title: `A Música era: `,
                     html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
                     icon: 'error',
-                    confirmButtonText: 'Próxima'
+                    confirmButtonText: 'Próxima',
+                    allowOutsideClick: false,
                 }).then((result) => {
                     if (result.isConfirmed) {
                         if (difficult - 1 === 0) {
@@ -406,7 +408,7 @@ $(function () {
         } else {
             SONGS_SELECTED.forEach(song => {
                 var emoji = song.win ? '&#9989;' : '&#10060;'
-                $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : ''}  - ${emoji} -  ${song.seconds}s</li>`)
+                $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : ''}  - ${emoji} -  ${song.seconds.toFixed(2)}s</li>`)
             })
             $("#win").show(300);
         }
@@ -428,7 +430,8 @@ $(function () {
             title: `A Música era: `,
             html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
             icon: 'info',
-            confirmButtonText: 'Próxima'
+            confirmButtonText: 'Próxima',
+            allowOutsideClick: false,
         }).then((result) => {
             if (result.isConfirmed) {
                 if (difficult - 1 === 0) {
@@ -441,8 +444,6 @@ $(function () {
     })
 
     $(".challenge").on('click', async function () {
-
-
         Swal.fire({
             title: 'Digite o seu nome!',
             input: 'text',
@@ -465,7 +466,6 @@ $(function () {
                     type_query: type_query
                 }
 
-
                 var challenge_string = JSON.stringify(challenge);
                 var encrypted = CryptoJS.AES.encrypt(challenge_string, key);
                 var settings = {
@@ -481,9 +481,6 @@ $(function () {
                 };
                 await $.ajax(settings).done(async function (response) {
                     urlchall = response.url.shortLink
-                    // await copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
-                    // alert(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink)
-                    // await copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + response.url.shortLink);
                 });
 
             },
@@ -498,7 +495,13 @@ $(function () {
                     confirmButtonText: 'Copiar desafio!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no link abaixo e tente ganhar de mim! \n` + urlchall);
+                        var my_result = '';
+
+                        SONGS_SELECTED.reverse().forEach(song => {
+                            my_result += song.win ? '🟩 ' : '🟥 '
+                        });
+
+                        copyStringToClipboard(`Estou te desafiando em *${artistName}* no SongGuess! clique no lnk abaixo e tente ganhar de mim! \n\n 🎵 ${my_result} \n\n` + urlchall);
                         Swal.fire('Link copiado', '', 'success');
                     }
                 })
@@ -524,9 +527,8 @@ $(function () {
 
         others = others.slice(0, 3);
         var options = others.concat(song);
-        console.log(options);
-        $('#bar').empty();
 
+        $('#bar').empty();
 
         $("#jquery_jplayer_1").jPlayer("destroy");
 
@@ -538,7 +540,6 @@ $(function () {
         });
 
         myPlayer.player.bind($.jPlayer.event.timeupdate, function (event) {
-
             if (mode == 'default') {
                 $('.timeMidi').hide();
                 if (event.jPlayer.status.currentTime > init_seconds) {
@@ -547,7 +548,7 @@ $(function () {
             } else if (mode == 'time') {
                 $('#moreSeconds').hide();
                 totalTimePlayed = event.jPlayer.status.currentTime;
-                $('.timeMidi').text(totalTimePlayed);
+                $('.timeMidi').text(totalTimePlayed.toFixed(2));
             }
         })
 
@@ -579,60 +580,24 @@ $(function () {
 
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
-
-        // While there remain elements to shuffle.
         while (currentIndex != 0) {
-
-            // Pick a remaining element.
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex--;
 
-            // And swap it with the current element.
             [array[currentIndex], array[randomIndex]] = [
                 array[randomIndex], array[currentIndex]];
         }
-
         return array;
     }
 
-    function fallbackCopyTextToClipboard(text) {
-        var textArea = document.createElement("textarea");
-        textArea.value = text;
-
-        // Avoid scrolling to bottom
-        textArea.style.top = "0";
-        textArea.style.left = "0";
-        textArea.style.position = "fixed";
-
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-            var successful = document.execCommand('copy');
-            var msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Fallback: Copying text command was ' + msg);
-        } catch (err) {
-            console.error('Fallback: Oops, unable to copy', err);
-        }
-
-        document.body.removeChild(textArea);
-    }
-
     function copyStringToClipboard(str) {
-        // Create new element
         var el = document.createElement('textarea');
-        // Set value (string to be copied)
         el.value = str;
-        // Set non-editable to avoid focus and move outside of view
         el.setAttribute('readonly', '');
         el.style = { position: 'absolute', left: '-9999px' };
         document.body.appendChild(el);
-        // Select text inside element
         el.select();
-        // Copy text to clipboard
         document.execCommand('copy');
-        // Remove temporary element
         document.body.removeChild(el);
     }
 
