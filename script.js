@@ -120,6 +120,52 @@ $(function () {
         }
     })
 
+    $.ajax({
+        url: endpoint + '/playlists',
+        method: 'get',
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        success: function (response) {
+            console.log(response);
+            $('#playlist-name').text(response.message);
+            var playlists = response.playlists.items;
+
+            playlists.forEach(artist => {
+                $('#playlists').append(`
+                    <div class="ml-2 text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;">
+                                <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
+                                    <div class="xBV4XgMq0gC5lQICFWY_">
+                                        <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
+                                            <div class="">
+                                                <img src="${artist.images[0].url}"
+                                                     class="mMx2LUixlnN_Fu45JpFB SKJSok3LfyedjZjujmFt yYflTYbufy7rATGQiZfq">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="E1N1ByPFWo4AJLHovIBQ">
+                                        <a>
+                                            <div class="Type__TypeElement-goli3j-0 kgUbfh nk6UgB4GUYNoAcPtAQaG">${artist.name}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="tsv7E_RBBw6v0XTQlcRo" data-testid="card-click-handler"></div>
+                                </div>
+                            </div>
+                        </div>
+`)
+
+            })
+            $('#playlists').owlCarousel({
+                margin: 10,
+                loop: true,
+                autoWidth: true,
+                items: 4
+            });
+        }
+    })
+
     /* TELA DE ESCOLHER O ARTISTA OU GÊNERO  */
     $('#selectArtists').on('input', async function () {
         var search = $('#selectArtists').val();
@@ -208,6 +254,17 @@ $(function () {
         getSongsByGenre(genre);
         $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
         artistName = genre.slice(0, 1).toUpperCase() + genre.slice(1);
+
+    })
+
+    $(document).on('click', '.select-playlist', function () {
+        random = true;
+        DIFF_SELECT.show(300);
+        SELECT_ARTIST.hide(300);
+        genre = $(this).data('name');
+        getSongsByPlaylist(genre);
+        $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
+        artistName = genre.slice(0, 1).toUpperCase() + genre.slice(1);
     })
 
     async function getSongsByGenre(genre) {
@@ -216,6 +273,30 @@ $(function () {
 
         $.ajax({
             url: endpoint + '/random?q=' + encodeURI(genre),
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                dificult_select.hide();
+                LOADING.show(300);
+                $('#challenge_start').hide();
+                $('#loading-challenge').show(300);
+            },
+            success: function (response) {
+                dificult_select.show(300);
+                LOADING.hide(300);
+                SONGS = response;
+                $('#challenge_start').show();
+                $('#loading-challenge').hide(300);
+            }
+        });
+    }
+
+    async function getSongsByPlaylist(genre) {
+        query_string = genre;
+        type_query = 'playlist';
+
+        $.ajax({
+            url: endpoint + '/playlists/songs?q=' + encodeURI(genre),
             method: 'get',
             dataType: 'json',
             beforeSend: function () {
