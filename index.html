@@ -193,7 +193,7 @@
                                                                id="selectArtists"
                                                                maxlength="800" autocorrect="off" autocapitalize="off"
                                                                spellcheck="false"
-                                                               placeholder="Artistas"
+                                                               placeholder="Artistas, Gêneros ou Playlist"
                                                                value=""
                                                                style="color: rgb(0, 0, 0);">
                                                     </form>
@@ -208,54 +208,86 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 text-center">
-                                            <div class="form-group" style="margin-top: 20px;">
-                                                <div class="g3Xinb8x23n81ejvS9Uj">
-                                                    <form role="search">
-                                                        <input class="Type__TypeElement-goli3j-0 cPwEdQ QO9loc33XC50mMRUCIvf"
-                                                               id="selectGenres"
-                                                               maxlength="800" autocorrect="off" autocapitalize="off"
-                                                               spellcheck="false"
-                                                               placeholder="Gênero"
-                                                               value=""
-                                                               style="color: rgb(0, 0, 0);">
-                                                    </form>
-                                                    <div class="t2K4_iLmAyDtH7mcT5Wy"><span
-                                                            class="H6jh9Xd7DNOq3NsLDmCB"><svg role="img" height="24"
-                                                                                              width="24"
-                                                                                              class="Svg-ytk21e-0 jAKAlG mOLTJ2mxkzHJj6Y9_na_"
-                                                                                              aria-hidden="true"
-                                                                                              viewBox="0 0 24 24"><path
-                                                            d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 101.414-1.414l-4.344-4.344a9.157 9.157 0 002.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"></path></svg></span>
-                                                    </div>
-                                                </div>
+                                        <div class="col-md-12 text-center mt-10">
+                        <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                              tabindex="-1" id="artists-title" style="display: none">Artistas</span>
+                                            <div class="owl-carousel mt-10" id="artists">
                                             </div>
                                         </div>
+<!--                                        <div class="col-md-6 text-center">-->
+<!--                                            <div class="form-group" style="margin-top: 20px;">-->
+<!--                                                <div class="g3Xinb8x23n81ejvS9Uj">-->
+<!--                                                    <form role="search">-->
+<!--                                                        <input class="Type__TypeElement-goli3j-0 cPwEdQ QO9loc33XC50mMRUCIvf"-->
+<!--                                                               id="selectGenres"-->
+<!--                                                               maxlength="800" autocorrect="off" autocapitalize="off"-->
+<!--                                                               spellcheck="false"-->
+<!--                                                               placeholder="Gênero"-->
+<!--                                                               value=""-->
+<!--                                                               style="color: rgb(0, 0, 0);">-->
+<!--                                                    </form>-->
+<!--                                                    <div class="t2K4_iLmAyDtH7mcT5Wy"><span-->
+<!--                                                            class="H6jh9Xd7DNOq3NsLDmCB"><svg role="img" height="24"-->
+<!--                                                                                              width="24"-->
+<!--                                                                                              class="Svg-ytk21e-0 jAKAlG mOLTJ2mxkzHJj6Y9_na_"-->
+<!--                                                                                              aria-hidden="true"-->
+<!--                                                                                              viewBox="0 0 24 24"><path-->
+<!--                                                            d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 101.414-1.414l-4.344-4.344a9.157 9.157 0 002.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"></path></svg></span>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                        <div class="col-md-12 text-center">
+                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                                                  tabindex="-1" id="genre-title" style="display: none">Gêneros</span>
+                                            <div class="owl-carousel mt-10" id="genres">
+                                            </div>
+                                        </div>
+<!--                                        <div class="col-md-6 text-center">-->
+<!--                                            <div class="form-group" style="margin-top: 20px;">-->
+<!--                                                <div class="g3Xinb8x23n81ejvS9Uj">-->
+<!--                                                    <form role="search">-->
+<!--                                                        <input class="Type__TypeElement-goli3j-0 cPwEdQ QO9loc33XC50mMRUCIvf"-->
+<!--                                                               id="selectPlaylists"-->
+<!--                                                               maxlength="800" autocorrect="off" autocapitalize="off"-->
+<!--                                                               spellcheck="false"-->
+<!--                                                               placeholder="Playlist"-->
+<!--                                                               value=""-->
+<!--                                                               style="color: rgb(0, 0, 0);">-->
+<!--                                                    </form>-->
+<!--                                                    <div class="t2K4_iLmAyDtH7mcT5Wy"><span-->
+<!--                                                            class="H6jh9Xd7DNOq3NsLDmCB"><svg role="img" height="24"-->
+<!--                                                                                              width="24"-->
+<!--                                                                                              class="Svg-ytk21e-0 jAKAlG mOLTJ2mxkzHJj6Y9_na_"-->
+<!--                                                                                              aria-hidden="true"-->
+<!--                                                                                              viewBox="0 0 24 24"><path-->
+<!--                                                            d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 101.414-1.414l-4.344-4.344a9.157 9.157 0 002.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"></path></svg></span>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
 
+
+                                        <div class="col-md-12 text-center">
+                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                                                  tabindex="-1" id="playlists-title" style="display: none">Playlists</span>
+                                            <div class="owl-carousel mt-10" id="playlists">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center mb-10">
+                                            <button
+                                                    class="btn btn-primary btn-user btn-block playlist-play">Jogue com sua Playlist!
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 text-center mt-10">
-                        <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
-                                                  tabindex="-1" id="artists-title" style="display: none">Artistas</span>
-                            <div class="owl-carousel mt-10" id="artists">
-                            </div>
-                        </div>
 
-                        <div class="col-md-12 text-center mt-10">
-                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
-                                                  tabindex="-1">Gêneros</span>
-                            <div class="owl-carousel mt-10" id="genres">
-                            </div>
-                        </div>
-                        <div class="col-md-12 text-center">
-                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
-                                                  tabindex="-1">Playlists <span class="text-danger"
-                                                                                id="playlist-name"></span></span>
-                            <div class="owl-carousel mt-10" id="playlists">
-                            </div>
-                        </div>
+
+
+
+
                     </div>
                 </div>
             </div>
@@ -440,7 +472,6 @@
                                             </button>
                                         </div>
                                     </div>
-
                                     <div class="row" id="songs">
 
                                     </div>

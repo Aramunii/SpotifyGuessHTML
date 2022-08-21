@@ -95,22 +95,50 @@ $(function () {
         }
     })
 
-    $.ajax({
-        url: endpoint + '/playlists',
-        method: 'get',
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        success: function (response) {
-            console.log(response);
-            $('#playlist-name').text(response.message);
-            var playlists = response.playlists.items;
 
-            playlists.forEach(artist => {
-                var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-                $('#playlists').append(`
-                    <div class="ml-2 text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()} ">
+
+    // getPlaylist();
+    //
+    // getCategories();
+
+    /* TELA DE ESCOLHER O ARTISTA OU GÊNERO  */
+    $('#selectArtists').on('input', async function () {
+        var search = $('#selectArtists').val();
+        getArtists(search);
+        getCategories(search);
+        getPlaylist(search);
+    })
+
+    $('#selectGenres').on('input', async function () {
+        var search = $('#selectGenres').val();
+        getCategories(search);
+    })
+
+    $('#selectPlaylists').on('input',async function ()
+    {
+        var search = $('#selectPlaylists').val();
+        getPlaylist(search);
+    })
+
+    async  function  getPlaylist(search ='')
+    {
+        $.ajax({
+            url: endpoint + '/playlists?q=' + search,
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function (response) {
+                $('#playlists').trigger("destroy.owl.carousel");
+                $('#playlists').empty();
+                $('#playlists-title').show();
+                $('#playlist-name').text(response.message);
+                var playlists = response.playlists.items;
+                playlists.forEach(artist => {
+                    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                    $('#playlists').append(`
+                    <div class="text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 166px;background-color: ${getRandomColor()} ">
                                 <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
                                     <div class="xBV4XgMq0gC5lQICFWY_">
                                         <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
@@ -131,31 +159,17 @@ $(function () {
                             </div>
                         </div>
                 `)
-            })
+                })
 
-            $('#playlists').owlCarousel({
-                margin: 10,
-                loop: true,
-                autoWidth: true,
-                items: 4
-            });
-        }
-    })
-
-
-    getCategories();
-
-    /* TELA DE ESCOLHER O ARTISTA OU GÊNERO  */
-    $('#selectArtists').on('input', async function () {
-        var search = $('#selectArtists').val();
-        getArtists(search);
-    })
-
-    $('#selectGenres').on('input', async function () {
-        var search = $('#selectGenres').val();
-        getCategories(search);
-    })
-
+                $('#playlists').owlCarousel({
+                    margin: 4,
+                    loop: true,
+                    autoWidth: true,
+                    items: 4
+                });
+            }
+        })
+    }
     async function getArtists(search) {
         $.ajax({
             url: endpoint + '/search/artists?q=' + encodeURI(search),
@@ -171,8 +185,8 @@ $(function () {
 
                     response.forEach(artist => {
                         $('#artists').append(`
-                    <div class="ml-2 text-center select-artist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()}">
+                    <div class=" text-center select-artist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 166px;background-color: ${getRandomColor()}">
                                 <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
                                     <div class="xBV4XgMq0gC5lQICFWY_">
                                         <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
@@ -196,7 +210,7 @@ $(function () {
 
                     })
                     $('#artists').owlCarousel({
-                        margin: 10,
+                        margin: 4,
                         loop: true,
                         autoWidth: true,
                         items: 4
@@ -218,10 +232,13 @@ $(function () {
                 var categories = response;
                 $('#genres').trigger("destroy.owl.carousel");
                 $('#genres').empty();
+                if(categories.length >0)
+                {                $('#genre-title').show();
+                }
                 categories.forEach(artist => {
                     $('#genres').append(`
-                    <div class="ml-2 text-center select-categorie" style=" cursor: pointer;width: 180px;" data-id="${artist.id}" data-name="${artist.name}">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()} ">
+                    <div class=" text-center select-categorie" style=" cursor: pointer;width: 180px;" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 166px;background-color: ${getRandomColor()} ">
                                 <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
                                     <div class="xBV4XgMq0gC5lQICFWY_">
                                         <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
@@ -245,7 +262,7 @@ $(function () {
                 })
 
                 $('#genres').owlCarousel({
-                    margin: 10,
+                    margin: 4,
                     loop: true,
                     autoWidth: true,
                     items: 4
@@ -346,11 +363,17 @@ $(function () {
                 $('#loading-challenge').show(300);
             },
             success: function (response) {
-                dificult_select.show(300);
-                LOADING.hide(300);
-                SONGS = response;
-                $('#challenge_start').show();
-                $('#loading-challenge').hide(300);
+                if(response.length >0)
+                {
+                    dificult_select.show(300);
+                    LOADING.hide(300);
+                    SONGS = response;
+                    $('#challenge_start').show();
+                    $('#loading-challenge').hide(300);
+                }else{
+                    swal.fire('Playlist inválida','Ocorreu um erro com sua playlist, verifique o link e tente novamente','error');
+                }
+
             }
         });
     }
@@ -378,8 +401,8 @@ $(function () {
                 if (response.length > 0) {
                     response.forEach(artist => {
                         $('#playlists-categories').append(`
-                    <div class="ml-2 text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()} ">
+                    <div class=" text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 166px;background-color: ${getRandomColor()} ">
                                 <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
                                     <div class="xBV4XgMq0gC5lQICFWY_">
                                         <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
@@ -403,7 +426,7 @@ $(function () {
                     })
 
                     $('#playlists-categories').owlCarousel({
-                        margin: 10,
+                        margin: 4,
                         loop: true,
                         autoWidth: true,
                         items: 4
@@ -480,6 +503,82 @@ $(function () {
         startGame();
     })
 
+    $('.playlist-play').on('click', function () {
+        Swal.fire({
+            title: 'Cole o link de uma playlist do spotify!',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Jogar!',
+            showLoaderOnConfirm: true,
+            preConfirm: async (url) => {
+                if(!url.split('/')[4])
+                {
+                    Swal.showValidationMessage(
+                        `Informe uma playlist válida`
+                    );
+                }else{
+                    var url_new = url.split('/')[4].split('?')[0];
+                    return  getMyPlaylist(url_new)
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if(result.isConfirmed)
+            {
+                DIFF_SELECT.show(300);
+                SELECT_ARTIST.hide(300);
+                PLAYLIST.hide(300);
+                console.log(result);
+                dificult_select.show(300);
+                LOADING.hide(300);
+                $('#challenge_start').show();
+                $('#loading-challenge').hide(300);
+            }
+        })
+    });
+
+
+
+   async function getMyPlaylist(genre) {
+        query_string = genre;
+        type_query = 'playlist';
+
+        $.ajax({
+            url: endpoint + '/playlist?q=' + encodeURI(genre),
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                dificult_select.hide();
+                LOADING.show(300);
+                $('#challenge_start').hide();
+                $('#loading-challenge').show(300);
+            },
+            success: function (response) {
+                if(response)
+                {
+                    var songs = [];
+                    response.tracks.items.map(track => {
+                        if (track.track) {
+                            if (track.track.name.includes('Live') || track.track.name.includes('Ao Vivo') || track.track.name.includes('(Ao Vivo)') || track.track.name.includes("Commentary")) {
+                            } else {
+                                if (track.track.preview_url) {
+                                    songs.push({ previewUrl: track.track.preview_url, artist: track.track.artists[0].name, song: track.track.name });
+                                }
+                            }
+                        }
+                    })
+                    SONGS = songs;
+                    artistName = response.name;
+                    $('#artist_title').text(artistName);
+                }else{
+                    swal.fire('Playlist inválida','Ocorreu um erro com sua playlist, verifique o link e tente novamente','error');
+                }
+            }
+        });
+    }
 
     async function startGame() {
         $("#modeSelect").hide(300);
@@ -639,27 +738,7 @@ $(function () {
     })
 
     $('#nextSong').on('click', function () {
-        answer_secods = init_seconds;
-        init_seconds = 40;
-        SONGS_SELECTED[difficult - 1].win = false;
-        SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-        $("#jquery_jplayer_1").jPlayer('play');
-        var actual_song = SONGS_SELECTED[difficult - 1];
-        Swal.fire({
-            title: `A Música era: `,
-            html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
-            icon: 'info',
-            confirmButtonText: 'Próxima',
-            allowOutsideClick: false,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                if (difficult - 1 === 0) {
-                    finishGame();
-                } else {
-                    nextSong();
-                }
-            }
-        });
+        guessWrong();
     })
 
     $(".challenge").on('click', async function () {
@@ -727,7 +806,6 @@ $(function () {
             }
         })
     })
-
 
     $('.share-result').on('click', function () {
         shareResult();
