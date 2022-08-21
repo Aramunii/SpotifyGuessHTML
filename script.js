@@ -87,7 +87,20 @@ $(function () {
     shuffledGENRE = GENRES.sort(() => 0.5 - Math.random());
 
     shuffledGENRE.forEach(genre => {
-        $("#genres").append(`<div class='bg-grey select-genre' data-genre='${genre}'><a>${genre.slice(0, 1).toUpperCase() + genre.slice(1).replace('-', ' ')}</a></div>`)
+        // $("#genres").append(`<div class='bg-grey select-genre' data-genre='${genre}'><a></a></div>`)
+        $("#genres").append(`<div class="ml-2 text-center select-genre" style=" cursor: pointer;width: 180px" data-genre='${genre}'">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 60px;">
+                                <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
+                                    <div class="E1N1ByPFWo4AJLHovIBQ">
+                                        <a>
+                                            <div class="Type__TypeElement-goli3j-0 kgUbfh nk6UgB4GUYNoAcPtAQaG">${genre.slice(0, 1).toUpperCase() + genre.slice(1).replace('-', ' ')}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="tsv7E_RBBw6v0XTQlcRo" data-testid="card-click-handler"></div>
+                                </div>
+                            </div>
+                        </div>`)
     });
 
     $('#genres').owlCarousel({
@@ -122,15 +135,36 @@ $(function () {
 
                 response.forEach(artist => {
                     $('#artists').append(`
+                    <div class="ml-2 text-center select-artist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;">
+                                <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
+                                    <div class="xBV4XgMq0gC5lQICFWY_">
+                                        <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
+                                            <div class="">
+                                                <img src="${artist.images[1].url}"
+                                                     class="mMx2LUixlnN_Fu45JpFB SKJSok3LfyedjZjujmFt yYflTYbufy7rATGQiZfq">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="E1N1ByPFWo4AJLHovIBQ">
+                                        <a>
+                                            <div class="Type__TypeElement-goli3j-0 kgUbfh nk6UgB4GUYNoAcPtAQaG">${artist.name}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="tsv7E_RBBw6v0XTQlcRo" data-testid="card-click-handler"></div>
+                                </div>
+                            </div>
+                        </div>
+`)
 
-                            <div class="ml-2 text-center" style=" cursor: pointer">
-                                <a class="select-artist" data-id="${artist.id}" data-name="${artist.name}" >
-                                 <img src="${artist.images[1].url}">
-                                 <h4 class="text-default">${artist.name}</h4>
-                                </a>
-                            </div>`)
                 })
-                $('#artists').owlCarousel();
+                $('#artists').owlCarousel({
+                    margin: 10,
+                    loop: true,
+                    autoWidth: true,
+                    items: 4
+                });
             }
         })
     })
@@ -396,8 +430,8 @@ $(function () {
             let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
             SONGS_SELECTED.forEach((song, index) => {
-                var emoji = song.win ? '&#9989;' : '&#10060;'
-                var emoji2 = json_challenge.song_selected[index].win ? '&#9989;' : '&#10060;'
+                var emoji = song.win ?  '🟩 ' : '🟥 '
+                var emoji2 = json_challenge.song_selected[index].win ?  '🟩 ' : '🟥 '
                 $('#challenge_table').append(`
                 <tr>
                     <td>${song.song} ${random ? '- ' + song.artist : ''}  -</td>
@@ -408,8 +442,8 @@ $(function () {
             $("#win_challenge").show(300);
         } else {
             SONGS_SELECTED.forEach(song => {
-                var emoji = song.win ? '&#9989;' : '&#10060;'
-                $('#answers').append(`<li >${song.song} ${random ? '- ' + song.artist : ''}  - ${emoji} -  ${song.seconds.toFixed(2)}s</li>`)
+                var emoji = song.win ? '🟩 ' : '🟥 '
+                $('#answers').append(`<p >${emoji} ${song.song} ${random ? '- ' + song.artist : ''} - ${song.seconds.toFixed(2)}s</p>`)
             })
             $("#win").show(300);
         }
@@ -554,12 +588,11 @@ $(function () {
                 my_result += song.win ? '🟩 ' : '🟥 '
             })
 
-            copyStringToClipboard(`Meu resultado em  *${artistName}* no SongGuess!\n\n🎵 ${my_result} \n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
+            copyStringToClipboard(`Meu resultado em  *${artistName}* no SongGuess!\n\n ${my_result} \n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
             Swal.fire('Copiado', '', 'success');
         }
 
     }
-
 
 
     async function setMusic(song) {
@@ -586,8 +619,8 @@ $(function () {
             {
                 m4a: url,
             }, {
-            cssSelectorAncestor: "#cp_container_1"
-        });
+                cssSelectorAncestor: "#cp_container_1"
+            });
 
         myPlayer.player.bind($.jPlayer.event.timeupdate, function (event) {
             if (mode == 'default') {
@@ -609,23 +642,24 @@ $(function () {
         })
 
         myPlayer.player.bind($.jPlayer.event.seeked, function (event) {
-          if(mode == 'time'){
-            Swal.fire({
-                title: 'Você não pode trapacear!!!',
-                text: "",
-                icon: 'error',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Próxima',
-                allowOutsideClick: false,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    if (difficult - 1 === 0) {
-                        finishGame();
-                    } else {
-                        nextSong();
+            if (mode == 'time') {
+                Swal.fire({
+                    title: 'Você não pode trapacear!!!',
+                    text: "",
+                    icon: 'error',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Próxima',
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (difficult - 1 === 0) {
+                            finishGame();
+                        } else {
+                            nextSong();
+                        }
                     }
-                }
-            })}
+                })
+            }
         })
 
         shuffle(options);
@@ -670,7 +704,7 @@ $(function () {
         var el = document.createElement('textarea');
         el.value = str;
         el.setAttribute('readonly', '');
-        el.style = { position: 'absolute', left: '-9999px' };
+        el.style = {position: 'absolute', left: '-9999px'};
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');
