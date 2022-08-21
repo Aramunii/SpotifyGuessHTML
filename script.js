@@ -469,7 +469,7 @@ $(function () {
 
     $('.type-game').on('click', function () {
         type_mode = $(this).data('mode');
-        $('#type_mode').text($(this).text() + survival ? '(Até errar!)' : "");
+        $('#type_mode').text($(this).text());
         $('#type_select').hide(300);
         $('#mode_select').show(300);
     })
