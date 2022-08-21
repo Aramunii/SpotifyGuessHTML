@@ -10,6 +10,7 @@ var query_string = '';
 var type_query = 'artist';
 var urlchall = '';
 var seeked = false;
+var survival = false;
 
 SONGS = [];
 SONGS_SELECTED = [];
@@ -30,11 +31,12 @@ GENRES = ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime",
 
 $(function () {
     /* INICIA VARIAVEIS */
-    var LOADING = $("#loading");
-    var dificult_select = $("#difficult_select");
+    var LOADING = $(".loading");
+    var dificult_select = $(".difficult_select");
     var DIFF_SELECT = $('#dificultSelect');
     var GAME = $("#game");
     var SELECT_ARTIST = $('#selectMenu');
+    var PLAYLIST = $('#selectPlaylist');
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -83,33 +85,6 @@ $(function () {
         startGame();
     })
 
-    /* RANDOMIZA O GÊNERO E PEGA O AUTH  */
-    shuffledGENRE = GENRES.sort(() => 0.5 - Math.random());
-
-    shuffledGENRE.forEach(genre => {
-        // $("#genres").append(`<div class='bg-grey select-genre' data-genre='${genre}'><a></a></div>`)
-        $("#genres").append(`<div class="ml-2 text-center select-genre" style=" cursor: pointer;width: 180px" data-genre='${genre}'">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 60px;">
-                                <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
-                                    <div class="E1N1ByPFWo4AJLHovIBQ">
-                                        <a>
-                                            <div class="Type__TypeElement-goli3j-0 kgUbfh nk6UgB4GUYNoAcPtAQaG">${genre.slice(0, 1).toUpperCase() + genre.slice(1).replace('-', ' ')}
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="tsv7E_RBBw6v0XTQlcRo" data-testid="card-click-handler"></div>
-                                </div>
-                            </div>
-                        </div>`)
-    });
-
-    $('#genres').owlCarousel({
-        margin: 10,
-        loop: true,
-        autoWidth: true,
-        items: 4
-    })
-
     $.ajax({
         url: endpoint + '/code',
         method: 'get',
@@ -132,9 +107,10 @@ $(function () {
             var playlists = response.playlists.items;
 
             playlists.forEach(artist => {
+                var randomColor = Math.floor(Math.random() * 16777215).toString(16);
                 $('#playlists').append(`
                     <div class="ml-2 text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()} ">
                                 <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
                                     <div class="xBV4XgMq0gC5lQICFWY_">
                                         <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
@@ -154,9 +130,9 @@ $(function () {
                                 </div>
                             </div>
                         </div>
-`)
-
+                `)
             })
+
             $('#playlists').owlCarousel({
                 margin: 10,
                 loop: true,
@@ -166,9 +142,21 @@ $(function () {
         }
     })
 
+
+    getCategories();
+
     /* TELA DE ESCOLHER O ARTISTA OU GÊNERO  */
     $('#selectArtists').on('input', async function () {
         var search = $('#selectArtists').val();
+        getArtists(search);
+    })
+
+    $('#selectGenres').on('input', async function () {
+        var search = $('#selectGenres').val();
+        getCategories(search);
+    })
+
+    async function getArtists(search) {
         $.ajax({
             url: endpoint + '/search/artists?q=' + encodeURI(search),
             method: 'get',
@@ -176,13 +164,15 @@ $(function () {
             beforeSend: function () {
             },
             success: function (response) {
-                $('#artists').trigger("destroy.owl.carousel");
-                $('#artists').empty();
+                if (response.length > 0) {
+                    $('#artists').trigger("destroy.owl.carousel");
+                    $('#artists').empty();
+                    $('#artists-title').show()
 
-                response.forEach(artist => {
-                    $('#artists').append(`
+                    response.forEach(artist => {
+                        $('#artists').append(`
                     <div class="ml-2 text-center select-artist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
-                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()}">
                                 <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
                                     <div class="xBV4XgMq0gC5lQICFWY_">
                                         <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
@@ -204,8 +194,57 @@ $(function () {
                         </div>
 `)
 
+                    })
+                    $('#artists').owlCarousel({
+                        margin: 10,
+                        loop: true,
+                        autoWidth: true,
+                        items: 4
+                    });
+                }
+
+            }
+        })
+    }
+
+    async function getCategories(search = '') {
+        $.ajax({
+            url: endpoint + '/categories?q=' + search,
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function (response) {
+                var categories = response;
+                $('#genres').trigger("destroy.owl.carousel");
+                $('#genres').empty();
+                categories.forEach(artist => {
+                    $('#genres').append(`
+                    <div class="ml-2 text-center select-categorie" style=" cursor: pointer;width: 180px;" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()} ">
+                                <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
+                                    <div class="xBV4XgMq0gC5lQICFWY_">
+                                        <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
+                                            <div class="">
+                                                <img src="${artist.icons[0].url}"
+                                                     class="mMx2LUixlnN_Fu45JpFB SKJSok3LfyedjZjujmFt yYflTYbufy7rATGQiZfq">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="E1N1ByPFWo4AJLHovIBQ">
+                                        <a>
+                                            <div class="Type__TypeElement-goli3j-0 kgUbfh nk6UgB4GUYNoAcPtAQaG">${artist.name}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="tsv7E_RBBw6v0XTQlcRo" data-testid="card-click-handler"></div>
+                                </div>
+                            </div>
+                        </div>
+                `)
                 })
-                $('#artists').owlCarousel({
+
+                $('#genres').owlCarousel({
                     margin: 10,
                     loop: true,
                     autoWidth: true,
@@ -213,7 +252,7 @@ $(function () {
                 });
             }
         })
-    })
+    }
 
     $(document).on('click', '.select-artist', function () {
         DIFF_SELECT.show(300);
@@ -257,16 +296,6 @@ $(function () {
 
     })
 
-    $(document).on('click', '.select-playlist', function () {
-        random = true;
-        DIFF_SELECT.show(300);
-        SELECT_ARTIST.hide(300);
-        genre = $(this).data('name');
-        getSongsByPlaylist(genre);
-        $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
-        artistName = genre.slice(0, 1).toUpperCase() + genre.slice(1);
-    })
-
     async function getSongsByGenre(genre) {
         query_string = genre;
         type_query = 'genre';
@@ -290,6 +319,17 @@ $(function () {
             }
         });
     }
+
+    $(document).on('click', '.select-playlist', function () {
+        random = true;
+        DIFF_SELECT.show(300);
+        SELECT_ARTIST.hide(300);
+        PLAYLIST.hide(300);
+        genre = $(this).data('name');
+        getSongsByPlaylist($(this).data('id'));
+        $('#artist_title').text(genre.slice(0, 1).toUpperCase() + genre.slice(1));
+        artistName = genre.slice(0, 1).toUpperCase() + genre.slice(1);
+    })
 
     async function getSongsByPlaylist(genre) {
         query_string = genre;
@@ -315,17 +355,97 @@ $(function () {
         });
     }
 
+    $(document).on('click', '.select-categorie', function () {
+        PLAYLIST.show(300);
+        SELECT_ARTIST.hide(300);
+        getPlaylistsCategories($(this).data('id'))
+    })
+
+    async function getPlaylistsCategories(genre) {
+        query_string = genre;
+        type_query = 'playlist';
+        $.ajax({
+            url: endpoint + '/categories/playlist?q=' + encodeURI(genre),
+            method: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                dificult_select.hide();
+                LOADING.show(300);
+            },
+            success: function (response) {
+                dificult_select.show(300);
+                LOADING.hide(300);
+                if (response.length > 0) {
+                    response.forEach(artist => {
+                        $('#playlists-categories').append(`
+                    <div class="ml-2 text-center select-playlist" style=" cursor: pointer;width: 180px" data-id="${artist.id}" data-name="${artist.name}">
+                            <div class="LunqxlFIupJw_Dkx6mNx" style="height: 230px;background-color: ${getRandomColor()} ">
+                                <div draggable="true" class="XiVwj5uoqqSFpS4cYOC6">
+                                    <div class="xBV4XgMq0gC5lQICFWY_">
+                                        <div class="g4PZpjkqEh5g7xDpCr2K yYflTYbufy7rATGQiZfq">
+                                            <div class="">
+                                                <img src="${artist.images[0].url}"
+                                                     class="mMx2LUixlnN_Fu45JpFB SKJSok3LfyedjZjujmFt yYflTYbufy7rATGQiZfq">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="E1N1ByPFWo4AJLHovIBQ">
+                                        <a>
+                                            <div class="Type__TypeElement-goli3j-0 kgUbfh nk6UgB4GUYNoAcPtAQaG">${artist.name}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="tsv7E_RBBw6v0XTQlcRo" data-testid="card-click-handler"></div>
+                                </div>
+                            </div>
+                        </div>
+                `)
+                    })
+
+                    $('#playlists-categories').owlCarousel({
+                        margin: 10,
+                        loop: true,
+                        autoWidth: true,
+                        items: 4
+                    });
+                } else {
+                    $('#difficult_select').append(`<h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM text-center mb-1">A API DO SPOTIFY NÃO RETORNOU NENHUMA PLAYLIST</h6>
+<button onclick="window.location.href = 'https://aramunii.github.io/SpotifyGuessHTML/'"
+                                                class="btn btn-primary text-default btn-user btn-block share Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                            Novo
+                                            jogo
+                                        </button>`)
+                }
+
+
+            }
+        });
+    }
+
     /*  TElA DE ESCOLHER MODO DE JOGO*/
     $('.select-diff').on('click', function () {
-        difficult = parseInt($(this).text())
-        difficult_selected = parseInt($(this).text())
+        console.log($(this).text());
+        SONGS = [
+            ...new Map(SONGS.map((item) => [item["song"], item])).values(),
+        ];
+        if ($(this).text() == 'Até errar!') {
+
+            difficult = SONGS.length;
+            difficult_selected = SONGS.length;
+            survival = true;
+        } else {
+            difficult = parseInt($(this).text())
+            difficult_selected = parseInt($(this).text())
+        }
 
         setSongs();
     })
 
     async function setSongs() {
+
         const shuffled = SONGS.sort(() => 0.5 - Math.random());
         let selected = shuffled.slice(0, difficult);
+        console.log(selected);
 
         SONGS_SELECTED = selected.map(select => {
             return {
@@ -337,6 +457,7 @@ $(function () {
                 seconds: 0,
             }
         })
+        console.log(SONGS_SELECTED)
 
         DIFF_SELECT.hide(300);
         $("#modeSelect").show(300);
@@ -348,14 +469,14 @@ $(function () {
 
     $('.type-game').on('click', function () {
         type_mode = $(this).data('mode');
-        $('#type_mode').text($(this).text());
+        $('#type_mode').text($(this).text() + survival ? '(Até errar!)' : "");
         $('#type_select').hide(300);
         $('#mode_select').show(300);
     })
 
     $('.mode-select').on('click', function () {
         mode = $(this).data('mode');
-        $('#mode_game').text($(this).text());
+        $('#mode_game').text($(this).text() + survival ? '(Até errar!)' : "");
         startGame();
     })
 
@@ -381,121 +502,83 @@ $(function () {
         $("#jquery_jplayer_1").jPlayer('play');
     })
 
+
+    async function guessWin(actual_song) {
+        answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
+        init_seconds = 40;
+        totalTimePlayed = 0;
+
+        SONGS_SELECTED[difficult - 1].win = true;
+        SONGS_SELECTED[difficult - 1].played = true;
+        SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+
+        $('.timeMidi').hide();
+        $("#jquery_jplayer_1").jPlayer('play');
+
+        Swal.fire({
+            title: `${actual_song.song}`,
+            html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
+            icon: 'success',
+            confirmButtonText: 'Próxima',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (difficult - 1 === 0) {
+                    finishGame();
+                } else {
+                    nextSong();
+                }
+            }
+        });
+
+
+    }
+
+    async function guessWrong(actual_song) {
+        answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
+        init_seconds = 40;
+        totalTimePlayed = 0;
+
+        SONGS_SELECTED[difficult - 1].win = false;
+        SONGS_SELECTED[difficult - 1].played = true;
+        SONGS_SELECTED[difficult - 1].seconds = answer_secods;
+
+        $('.timeMidi').hide();
+        $("#jquery_jplayer_1").jPlayer('play');
+
+        var actual_song = SONGS_SELECTED[difficult - 1];
+
+        Swal.fire({
+            title: `A Música era: `,
+            html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
+            icon: 'error',
+            confirmButtonText: 'Próxima',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (difficult - 1 === 0 || survival) {
+                    finishGame();
+                } else {
+                    nextSong();
+                }
+            }
+        });
+    }
+
     $(document).on('click', '.guess-song', function () {
         var actual_song = SONGS_SELECTED[difficult - 1];
 
         if (type_mode != 'artist') {
             if ($(this).data('song') == actual_song.song) {
-                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
-                init_seconds = 40;
-                totalTimePlayed = 0;
-
-                SONGS_SELECTED[difficult - 1].win = true;
-                SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-
-                $('.timeMidi').hide();
-                $("#jquery_jplayer_1").jPlayer('play');
-
-                Swal.fire({
-                    title: `${actual_song.song}`,
-                    html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
-                    icon: 'success',
-                    confirmButtonText: 'Próxima',
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (difficult - 1 === 0) {
-                            finishGame();
-                        } else {
-                            nextSong();
-                        }
-                    }
-                });
+                guessWin(actual_song);
             } else {
-                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
-                init_seconds = 40;
-                totalTimePlayed = 0;
-
-                SONGS_SELECTED[difficult - 1].win = false;
-                SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-
-                $('.timeMidi').hide();
-                $("#jquery_jplayer_1").jPlayer('play');
-
-                var actual_song = SONGS_SELECTED[difficult - 1];
-
-                Swal.fire({
-                    title: `A Música era: `,
-                    html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
-                    icon: 'error',
-                    confirmButtonText: 'Próxima',
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (difficult - 1 === 0) {
-                            finishGame();
-                        } else {
-                            nextSong();
-                        }
-                    }
-                });
+                guessWrong(actual_song)
             }
-
         } else {
-
             if ($(this).data('artist') == actual_song.artist) {
-                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
-                init_seconds = 40;
-                totalTimePlayed = 0;
-
-                SONGS_SELECTED[difficult - 1].win = true;
-                SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-
-                $('.timeMidi').hide();
-                $("#jquery_jplayer_1").jPlayer('play');
-
-                Swal.fire({
-                    title: `${actual_song.song}`,
-                    html: `<p>Acertei a música ouvindo apenas ${answer_secods} segundos</p>`,
-                    icon: 'success',
-                    confirmButtonText: 'Próxima',
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (difficult - 1 === 0) {
-                            finishGame();
-                        } else {
-                            nextSong();
-                        }
-                    }
-                });
+                guessWin(actual_song);
             } else {
-                answer_secods = mode == 'default' ? init_seconds : totalTimePlayed;
-                init_seconds = 40;
-                totalTimePlayed = 0;
-
-                SONGS_SELECTED[difficult - 1].win = false;
-                SONGS_SELECTED[difficult - 1].seconds = answer_secods;
-
-                $('.timeMidi').hide();
-                $("#jquery_jplayer_1").jPlayer('play');
-
-                var actual_song = SONGS_SELECTED[difficult - 1];
-                Swal.fire({
-                    title: `A Música era: `,
-                    html: `<p>${actual_song.song} ${random ? '- ' + actual_song.artist : ''}</p>`,
-                    icon: 'error',
-                    confirmButtonText: 'Próxima',
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (difficult - 1 === 0) {
-                            finishGame();
-                        } else {
-                            nextSong();
-                        }
-                    }
-                });
+                guessWrong(actual_song)
             }
         }
     });
@@ -511,8 +594,8 @@ $(function () {
             let json_challenge = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
             SONGS_SELECTED.forEach((song, index) => {
-                var emoji = song.win ?  '🟩 ' : '🟥 '
-                var emoji2 = json_challenge.song_selected[index].win ?  '🟩 ' : '🟥 '
+                var emoji = song.win ? '🟩 ' : '🟥 '
+                var emoji2 = json_challenge.song_selected[index].win ? '🟩 ' : '🟥 '
                 $('#challenge_table').append(`
                 <tr>
                     <td>${song.song} ${random ? '- ' + song.artist : ''}  -</td>
@@ -522,10 +605,26 @@ $(function () {
             })
             $("#win_challenge").show(300);
         } else {
+            var count = 0;
+
             SONGS_SELECTED.forEach(song => {
                 var emoji = song.win ? '🟩 ' : '🟥 '
-                $('#answers').append(`<p >${emoji} ${song.song} ${random ? '- ' + song.artist : ''} - ${song.seconds.toFixed(2)}s</p>`)
+
+                if (survival) {
+                    if (song.played) {
+                        $('#answers').append(`<p >${emoji} ${song.song} ${random ? '- ' + song.artist : ''} - ${song.seconds.toFixed(2)}s</p>`)
+                        if (song.win) {
+                            count++;
+                        }
+                    }
+                } else {
+                    $('#answers').append(`<p >${emoji} ${song.song} ${random ? '- ' + song.artist : ''} - ${song.seconds.toFixed(2)}s</p>`)
+                }
             })
+
+            if (survival) {
+                $('#survival_count').append(`<span class="text-success">${count}</span>/${SONGS_SELECTED.length}`);
+            }
             $("#win").show(300);
         }
 
@@ -664,12 +763,28 @@ $(function () {
             })
         } else {
             var my_result = '';
+            var count = 0;
 
             SONGS_SELECTED.reverse().forEach((song, index) => {
-                my_result += song.win ? '🟩 ' : '🟥 '
+                if (survival) {
+                    if (song.played) {
+                        my_result += song.win ? '🟩 ' : '🟥 '
+                        if (song.win) {
+                            count++;
+                        }
+                    }
+                } else {
+                    my_result += song.win ? '🟩 ' : '🟥 '
+                }
             })
 
-            copyStringToClipboard(`Meu resultado em  *${artistName}* no SongGuess!\n\n ${my_result} \n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
+            if (survival) {
+                copyStringToClipboard(`Meu resultado em  *${artistName}* Até errar no SongGuess!\n\n*${count}*/${SONGS_SELECTED.length}\n\n ${my_result} \n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
+
+            } else {
+                copyStringToClipboard(`Meu resultado em  *${artistName}* no SongGuess!\n\n ${my_result} \n\n` + 'Acesse para jogar : https://cutt.ly/yXEPa4k');
+            }
+
             Swal.fire('Copiado', '', 'success');
         }
 
@@ -677,6 +792,7 @@ $(function () {
 
 
     async function setMusic(song) {
+        console.log(song);
         init_seconds = 1;
         var url = song.previewUrl;
         var song_name = song.song;
@@ -792,4 +908,12 @@ $(function () {
         document.body.removeChild(el);
     }
 
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 })

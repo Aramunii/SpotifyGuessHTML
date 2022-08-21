@@ -229,6 +229,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-shadow: 2px 1px 7px black;
 }
 
 .cp-container {

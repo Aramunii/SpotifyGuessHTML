@@ -43,10 +43,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
             integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-    <script src="./script.js?ref=" +  ></script>
+    <script src="./script.js?ref=" +></script>
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-<!--    <link href="https://open.spotifycdn.com/cdn/build/web-player/web-player.98812019.css" rel="stylesheet">-->
+    <!--    <link href="https://open.spotifycdn.com/cdn/build/web-player/web-player.98812019.css" rel="stylesheet">-->
     <link href="css/spotify.css" rel="stylesheet">
 
     <link rel="stylesheet"
@@ -117,7 +117,7 @@
 
 </head>
 
-<body id="page-top"  style=" background-color: #000000;
+<body id="page-top" style=" background-color: #000000;
     background-image: linear-gradient(180deg, #000000 10%, #121212 100%);
     background-size: cover">
 
@@ -142,24 +142,27 @@
                                     <div class="col-md-12 center text-center" id="loading-challenge">
                                         <img style="display:block;margin-left: 25%" width="150"
                                              src="https://rockfeller.com.br/assets/imagem/carregando.gif">
-                                        <h5 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Carregando... guenta aê!</h5>
+                                        <h5 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Carregando...
+                                            guenta aê!</h5>
                                     </div>
                                     <div class="row" id="challenge_start">
                                         <div class="col-md-12 text-center">
                                             <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"> Você foi
-                                                desafiado por <span class="text-danger" id="name_challenge"></span></span>
-                                            <p class="m-0 font-weight-bold text-center mb-10 Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Em <span
+                                                desafiado por <span class="text-danger"
+                                                                    id="name_challenge"></span></span>
+                                            <p class="m-0 font-weight-bold text-center mb-10 Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                                Em <span
                                                     class="text-success" id="artist_name"></span></p>
-                                                <span class="mb-10 Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"> No modo
+                                            <span class="mb-10 Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"> No modo
                                                     <span class="text-warning" id="mode_name"> Contra o tempo</span>
                                                 </span>
 
-                                                <div class="form-group" style="margin-top: 20px;">
-                                                    <button
-                                                            class="btn btn-primary btn-user btn-block acceptChallenge">
-                                                        Aceitar
-                                                    </button>
-                                                </div>
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <button
+                                                        class="btn btn-primary btn-user btn-block acceptChallenge">
+                                                    Aceitar
+                                                </button>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -174,7 +177,7 @@
 
             <div id="selectMenu" style="display: block;">
                 <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-header py-3" >
+                    <div class="card-header py-3">
                         <h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">SpotyGuess</h6>
                     </div>
                     <div class="card-body p-0">
@@ -182,16 +185,38 @@
                             <div class="col-lg-12">
                                 <div class="p-4">
                                     <div class="row">
-                                        <div class="col-md-12 text-center">
-                                            <span    class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
-                                                tabindex="-1">Selecione um artista</span>
+                                        <div class="col-md-6 col-sm-2 text-center">
                                             <div class="form-group" style="margin-top: 20px;">
                                                 <div class="g3Xinb8x23n81ejvS9Uj">
                                                     <form role="search">
-                                                        <input class="Type__TypeElement-goli3j-0 cPwEdQ QO9loc33XC50mMRUCIvf" id="selectArtists"
+                                                        <input class="Type__TypeElement-goli3j-0 cPwEdQ QO9loc33XC50mMRUCIvf"
+                                                               id="selectArtists"
                                                                maxlength="800" autocorrect="off" autocapitalize="off"
                                                                spellcheck="false"
                                                                placeholder="Artistas"
+                                                               value=""
+                                                               style="color: rgb(0, 0, 0);">
+                                                    </form>
+                                                    <div class="t2K4_iLmAyDtH7mcT5Wy"><span
+                                                            class="H6jh9Xd7DNOq3NsLDmCB"><svg role="img" height="24"
+                                                                                              width="24"
+                                                                                              class="Svg-ytk21e-0 jAKAlG mOLTJ2mxkzHJj6Y9_na_"
+                                                                                              aria-hidden="true"
+                                                                                              viewBox="0 0 24 24"><path
+                                                            d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 101.414-1.414l-4.344-4.344a9.157 9.157 0 002.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"></path></svg></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group" style="margin-top: 20px;">
+                                                <div class="g3Xinb8x23n81ejvS9Uj">
+                                                    <form role="search">
+                                                        <input class="Type__TypeElement-goli3j-0 cPwEdQ QO9loc33XC50mMRUCIvf"
+                                                               id="selectGenres"
+                                                               maxlength="800" autocorrect="off" autocapitalize="off"
+                                                               spellcheck="false"
+                                                               placeholder="Gênero"
                                                                value=""
                                                                style="color: rgb(0, 0, 0);">
                                                     </form>
@@ -211,47 +236,52 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12 text-center mt-10">
+                        <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                                                  tabindex="-1" id="artists-title" style="display: none">Artistas</span>
+                            <div class="owl-carousel mt-10" id="artists">
+                            </div>
+                        </div>
 
-                        <div class="owl-carousel" id="artists">
-
+                        <div class="col-md-12 text-center mt-10">
+                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                                                  tabindex="-1">Gêneros</span>
+                            <div class="owl-carousel mt-10" id="genres">
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-center">
+                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                                                  tabindex="-1">Playlists <span class="text-danger"
+                                                                                id="playlist-name"></span></span>
+                            <div class="owl-carousel mt-10" id="playlists">
+                            </div>
                         </div>
                     </div>
-                    <hr>
+                </div>
+            </div>
+            <div id="selectPlaylist" style="display: none;">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-header py-3">
+                        <h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Selecione uma Playlist</h6>
+                    </div>
                     <div class="card-body p-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="p-4">
-                                    <div class="row">
-
-                                        <div class="col-md-12 text-center">
-                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
-                                                tabindex="-1">Selecione um Gênero</span>
-                                            <div class="owl-carousel mt-10" id="genres">
-                                            </div>
+                                    <div class="col-md-12 text-center loading" id="loading">
+                                        <img style="display:block" width="200"
+                                             src="https://rockfeller.com.br/assets/imagem/carregando.gif">
+                                        <h5 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Carregando...
+                                            guenta aê!</h5>
+                                    </div>
+                                    <div class="row difficult_select" id="difficult_select"
+                                         style="align-items: center;align-content: center">
+                                        <div class="owl-carousel mt-10" id="playlists-categories">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-                    <hr>
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="p-4">
-                                    <div class="row">
-                                        <div class="col-md-12 text-center">
-                                            <span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
-                                                  tabindex="-1">Playlists <span class="text-danger" id="playlist-name"></span></span>
-                                            <div class="owl-carousel mt-10" id="playlists">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -259,19 +289,22 @@
 
             <div id="dificultSelect" style="display: none;">
                 <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-header py-3" >
-                        <h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Deseja adivinhar quantas músicas?</h6>
+                    <div class="card-header py-3">
+                        <h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Deseja adivinhar quantas
+                            músicas?</h6>
                     </div>
                     <div class="card-body p-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="p-4">
-                                    <div class="col-md-12 text-center" id="loading" >
+                                    <div class="col-md-12 text-center loading" id="loading">
                                         <img style="display:block" width="200"
                                              src="https://rockfeller.com.br/assets/imagem/carregando.gif">
-                                        <h5 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Carregando... guenta aê!</h5>
+                                        <h5 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Carregando...
+                                            guenta aê!</h5>
                                     </div>
-                                    <div class="row" id="difficult_select" style="align-items: center;align-content: center">
+                                    <div class="row difficult_select" id="difficult_select"
+                                         style="align-items: center;align-content: center">
                                         <div class="col-md-3">
                                             <div class="form-group" style="margin-top: 20px;">
                                                 <button
@@ -283,6 +316,8 @@
                                                 <button
                                                         class="btn btn-primary btn-user  select-diff">10
                                                 </button>
+                                                <button
+                                                        class="btn btn-primary btn-user  select-diff">Até errar!</button>
                                             </div>
                                         </div>
                                     </div>
@@ -305,7 +340,9 @@
                                 <div class="p-4 text-center">
                                     <div id="type_select">
                                         <div class="row text-center">
-                                            <div class="col-md-12"><span class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">O que cê quer adivinhar ?</span></div>
+                                            <div class="col-md-12"><span
+                                                    class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">O que cê quer adivinhar ?</span>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
@@ -328,7 +365,9 @@
                                     </div>
                                     <div id="mode_select" style="display:none">
                                         <div class="row text-center">
-                                            <div class="col-md-12"><span  class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Como cê quer jogar ?</span></div>
+                                            <div class="col-md-12"><span
+                                                    class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Como cê quer jogar ?</span>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
@@ -356,7 +395,8 @@
             <div id="game" style="display: none;">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-header py-3">
-                        <h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM text-center">Adivinhe a música!
+                        <h6 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM text-center">Adivinhe a
+                            música!
                         </h6>
                     </div>
                     <div class="card-body p-0">
@@ -369,7 +409,8 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <h3 class=" text-center timeMidi Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM mb-1" style="display: block">0</h3>
+                                    <h3 class=" text-center timeMidi Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM mb-1"
+                                        style="display: block">0</h3>
                                     <div id="jquery_jplayer_1" class="cp-jplayer"></div>
                                     <div class="prototype-wrapper">
                                         <div id="cp_container_1" class="cp-container" style="height: 200px;">
@@ -390,9 +431,12 @@
                                         </div>
                                         <div class="row mt-2 mb-2 text-center">
                                             <button id='moreSeconds'
-                                                    class="btn btn-warning   btn-block Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">+1 segundo
+                                                    class="btn btn-warning   btn-block Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                                +1 segundo
                                             </button>
-                                            <button id='nextSong' class="btn btn-danger btn-user btn-block   Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Não sei
+                                            <button id='nextSong'
+                                                    class="btn btn-danger btn-user btn-block   Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                                Não sei
                                             </button>
                                         </div>
                                     </div>
@@ -420,29 +464,39 @@
                                 <div class="p-4">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <h1 id="artist_title" class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Supercombo</h1>
-                                            <h4 id="mode_game" class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"></h4>
-                                            <h5 id="type_mode" class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"></h5>
-                                        </div>
+                                            <h1 id="artist_title"
+                                                class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                                Supercombo</h1>
+                                            <h4 id="mode_game"
+                                                class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"></h4>
+                                            <h5 id="type_mode"
+                                                class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"></h5>
+                                            <h5 id="survival_count"
+                                                class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"></h5>                                        </div>
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-lg-12">
-                                            <div id="answers" class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM text-center" style="list-style: none;color: #f0f0f0; text-align: left!important;">
+                                            <div id="answers"
+                                                 class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM text-center"
+                                                 style="list-style: none;color: #f0f0f0; text-align: left!important;">
 
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin-top: 20px;">
                                         <button onclick="window.location.href = 'https://aramunii.github.io/SpotifyGuessHTML/'"
-                                                class="btn btn-primary text-default btn-user btn-block share Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Novo
+                                                class="btn btn-primary text-default btn-user btn-block share Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                            Novo
                                             jogo
                                         </button>
                                         <button
-                                                class="btn btn-success btn-user btn-block share-result Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Compartilhar
+                                                class="btn btn-success btn-user btn-block share-result Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                            Compartilhar
                                             resultado!
                                         </button>
                                         <button
-                                                class="btn btn-danger btn-user btn-block challenge Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Desafiar um amigo
+                                                class="btn btn-danger btn-user btn-block challenge Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                            Desafiar um amigo
                                         </button>
                                         <a id="payDev" style="display: block;"
                                            href="https://nubank.com.br/pagar/56hu3/lHYlQvDAmm"
@@ -468,27 +522,25 @@
                                 <div class="p-4">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <h1 id="artist_title_challenge" class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">Supercombo</h1>
+                                            <h1 id="artist_title_challenge"
+                                                class="text-center Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM">
+                                                Supercombo</h1>
                                         </div>
                                     </div>
                                     <div class="row mt-1">
                                         <div class="col-lg-12">
-                                            <table id="challenge_table" class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM" style="color: #f0f0f0">
-                                                <tbody><tr>
+                                            <table id="challenge_table"
+                                                   class="Type__TypeElement-goli3j-0 dnNHjd MfVrtIzQJ7iZXfRWg6eM"
+                                                   style="color: #f0f0f0">
+                                                <tbody>
+                                                <tr>
                                                     <th style="width: 187px; padding:0;">Música</th>
                                                     <th style="width: 100px; padding:0;">Você</th>
                                                     <th id="challenger"></th>
                                                 </tr>
-                                                <!-- <tr>
-                                                  <td>FUCK THE SYSTEM </td>
-                                                  <td>&#9989; 0.4s</td>
-                                                  <td>&#10060; 2.9s</td>
-                                                </tr> -->
-
                                                 </tbody>
-                                               </table>
+                                            </table>
                                             <ul id="answers" class="text-center">
-
                                             </ul>
                                         </div>
                                     </div>
