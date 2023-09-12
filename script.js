@@ -1,6 +1,6 @@
 var randomElement;
 var init_seconds = 1;
-var endpoint = 'https://song-guess2.herokuapp.com';
+var endpoint = 'https://evening-legendary-crayfish.glitch.me';
 // var endpoint = 'http://localhost:30850'
 var difficult = 0;
 var difficult_selected = 0;
