@@ -898,16 +898,22 @@ $(function () {
             });
 
         myPlayer.player.bind($.jPlayer.event.timeupdate, function (event) {
+
+            if(event.jPlayer.status.currentTime > 0)
+            {
+                totalTimePlayed = Math.ceil(event.jPlayer.status.currentTime * 1000) / 1000;
+                $('.timeMidi').text(Math.floor(totalTimePlayed / 60) + ':' + ('0' + Math.floor(totalTimePlayed % 60)).slice(-2));
+                var percent = event.jPlayer.status.currentPercentAbsolute;
+                $(".progress-bar").css("width", percent + "%");
+            }
+
             if (mode == 'default') {
-                $('.timeMidi').hide();
+                //$('.timeMidi').hide();
                 if (event.jPlayer.status.currentTime > init_seconds) {
                     $(this).jPlayer('stop');
                 }
-            } else if (mode == 'time') {
-                $('#moreSeconds').hide();
-                totalTimePlayed = event.jPlayer.status.currentTime;
-                $('.timeMidi').text(totalTimePlayed.toFixed(2));
-            }
+            } 
+
         })
 
         myPlayer.player.bind($.jPlayer.event.pause, function (event) {

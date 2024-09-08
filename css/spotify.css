@@ -247,3 +247,198 @@
 }.select-categorie{
      margin-right: -50px;
 }
+
+/* Game specific styles */
+.player-wrapper {
+    background-color: #282828;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.player-wrapper:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.timeMidi {
+    color: #1DB954;
+    text-shadow: 0 0 10px rgba(29, 185, 84, 0.5);
+    transition: all 0.3s ease;
+}
+
+.cp-container {
+    background-color: #181818;
+    border-radius: 50%;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.cp-container:hover {
+    transform: scale(1.05);
+}
+
+.btn-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#songs .btn {
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+}
+
+#songs .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 2rem !important;
+    }
+    
+    .btn-lg {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Custom animation for song buttons */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 40px 12px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 500px;
+    transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: #b3b3b3;
+}
+
+.search-input:focus {
+    outline: none;
+    background-color: #404040;
+    box-shadow: 0 0 0 2px #1DB954;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #b3b3b3;
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-wrapper {
+        max-width: 90%;
+    }
+}
+
+#playPlaylistBtn {
+    transition: all 0.3s ease;
+    background-color: #138a3d;
+    border-color: #138a3d;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 30px;
+}
+#playPlaylistBtn:hover {
+    background-color: #1ed760;
+    border-color: #1ed760;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+#playPlaylistBtn:active {
+    transform: scale(0.98);
+}
+
+.modal-content {
+    background-color: #282828;
+    color: #fff;
+}
+
+.modal-header, .modal-footer {
+    border-color: #404040;
+}
+
+.modal-body h6 {
+    color: #1DB954;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body ol, .modal-body ul {
+    padding-left: 20px;
+    margin-bottom: 1rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-body ul ul {
+    margin-top: 0.5rem;
+}
+
+.close {
+    color: #fff;
+}
+
+.close:hover {
+    color: #1DB954;
+}
+
+.btn-spotify {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.btn-outline-spotify {
+    background-color: transparent;
+    color: #1DB954;
+    border: 2px solid #1DB954;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
